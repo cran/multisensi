@@ -1,5 +1,6 @@
-plot.dynsi <- function(x, text.tuning=NULL, ...)
+plot.dynsi <- function(x, text.tuning=NULL, shade=FALSE, color=NULL, ...)
 {
+    ## changed by HM, 2013-05-03 : new arguments "shade" and "color"
     ## ENTREE
     ##               x:         dynsi  object
 
@@ -9,38 +10,40 @@ plot.dynsi <- function(x, text.tuning=NULL, ...)
     filtre.main <- apply(x$Att,2,sum)==1
     filtre.inter <- !filtre.main
     interaction <-  filtre.inter %*%as.matrix(x$SI)
-    x$iSI <- as.data.frame(rbind( as.matrix(x$iSI),interaction))
-    rownames(x$iSI)<- c(rownames( x$tSI),"interaction")
+    tab.indicesmi <- as.data.frame(rbind( as.matrix(x$mSI),interaction))
+    rownames(tab.indicesmi)<- c(rownames( x$mSI),"interaction")
 
-    indice.cum <-apply( x$iSI,2,cumsum)
+    indice.cum <-apply( tab.indicesmi,2,cumsum)
 
-    ## recherche des postions pour afficher les noms des parametres
+    ## recherche des positions pour afficher les noms des parametres
 
-    n.name <-1:(nrow(x$iSI)+1)
+    nb.outp <- ncol(tab.indicesmi)
+    names <- rownames(tab.indicesmi)
 
-    if(is.null(text.tuning)){ text.tuning=floor(ncol(x$iSI)/10)+1}
-    if(text.tuning> floor(ncol(x$iSI)/10)){text.tuning=floor(ncol(x$iSI)/10)+1}
+    n.name <-1:(nrow(tab.indicesmi)+1)
 
-    for(k in 1:nrow(x$iSI)){
+    if(is.null(text.tuning)){ text.tuning=floor(nb.outp/10)+1}
+    if(text.tuning> floor(nb.outp/10)){text.tuning=floor(nb.outp/10)+1}
 
-        max.k <- max(x$iSI[k,text.tuning:(ncol(x$iSI) -text.tuning)])
+    for(k in 1:nrow(tab.indicesmi)){
 
-        for(i in text.tuning:(ncol(x$iSI)-text.tuning)){
-            if(max.k==x$iSI[k,i]){ n.name[k] <- i}
+        max.k <- max(tab.indicesmi[k,text.tuning:(nb.outp -text.tuning)])
+
+        for(i in text.tuning:(nb.outp-text.tuning)){
+            if(max.k==tab.indicesmi[k,i]){ n.name[k] <- i}
         }
     }
 
-    min.inter <- min( indice.cum[nrow(indice.cum),text.tuning:(ncol(x$iSI) -text.tuning)] )
-    for(i in text.tuning:(ncol(x$iSI)-text.tuning)){
+    min.inter <- min( indice.cum[nrow(indice.cum),text.tuning:(nb.outp -text.tuning)] )
+    for(i in text.tuning:(nb.outp-text.tuning)){
         if(min.inter== indice.cum[nrow(indice.cum),i]){ n.name[length(n.name)] <- i}
     }
 
-    nb.outp <- ncol(x$iSI)
-    names <- rownames(x$iSI)
-
-    densite <- c(1,5,10,15,19,23)
-    ##angle <- c(0,45,90,135)
-
+    ## changed by HM, 2013-05-03
+    if(shade & is.null(color)) densite <- c(7,1,5,10,15,19,23,4) 
+    else densite <- rep(NULL, 8) 
+    if(!is.null(color)) colset <- color(nrow(tab.indicesmi)) 
+    else colset <- rep(NA, nrow(tab.indicesmi)) 
 
     plot(c(1,nb.outp),
          c(0,0),
@@ -51,10 +54,10 @@ plot.dynsi <- function(x, text.tuning=NULL, ...)
          ...)
     polygon(c(1,1:nb.outp,nb.outp),
             c(0,indice.cum[1,],0),
-            density=7,
+            density=densite[1],
             angle=100,
+            col=colset[1],
             cex=2)
-
     text(n.name[1],
          indice.cum[1,n.name[1]]/2,
          names[1],
@@ -62,40 +65,32 @@ plot.dynsi <- function(x, text.tuning=NULL, ...)
          col="black",
          font=2)
 
-    for (k in 2:nrow(x$iSI)){
+    for (k in 2:nrow(tab.indicesmi)){
 
         j <- k-1
-        if(j<=6){ dens <- densite[j]}
-        else{
-            if(j<=12){dens <- densite[j-6]}
-            else{
-                if(j<=18){dens <- densite[j-12]}
-                else{
-                    if(j<=24){ dens <- densite[j-18]}
-                    else{ den <- 30
-
-                      }
-                }
-            }
+        ## changed by HM, 2013-05-03
+        if(shade){
+          quat <-floor(j/4)
+          if(quat*4-j==0){ang <-0}
+          if(-quat*4+j==1){ang <-45}
+          if(-quat*4+j==2){ang <-90}
+          if(-quat*4+j==3){ang <-135}
         }
-        quat <-floor(j/4)
-        if(quat*4-j==0){ang <-0}
-        if(-quat*4+j==1){ang <-45}
-        if(-quat*4+j==2){ang <-90}
-        if(-quat*4+j==3){ang <-135}
+        else{ ang <- NULL }
 
         polygon( c(1:nb.outp, rev(1:nb.outp) ) ,
                 c(indice.cum[k-1,],rev(indice.cum[k,])),
-                density=dens,angle=ang,border="blue")
+                density=densite[ 2+(j-1)%%6 ],angle=ang,
+                col=colset[k], border="blue")
         text(n.name[k] ,
              (indice.cum[k-1,n.name[k]]+indice.cum[k,n.name[k]])/2,names[k],
              cex=1,col="black",font=2)
-    }
+      }
     polygon( c(1:nb.outp, rev(1:nb.outp) ) ,
             c(indice.cum[nrow(indice.cum),],rep(100,nb.outp)),
-            density=4, angle=30)
-    text(n.name[nrow(x$iSI)+1],
-         indice.cum[nrow(indice.cum),n.name[nrow(x$iSI)+1]]/2+50,
+            density=densite[8], angle=30)
+    text(n.name[nrow(tab.indicesmi)+1],
+         indice.cum[nrow(indice.cum),n.name[nrow(tab.indicesmi)+1]]/2+50,
          "residual",
          cex=1,col="black",font=2)
 }

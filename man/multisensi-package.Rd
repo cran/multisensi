@@ -41,7 +41,9 @@ corresponding to these combinations.  The size of \code{X} is \eqn{n*p} and the 
 of \code{Y} is \eqn{n*q} where \eqn{p} is the number of the input factor, \eqn{q} is the number
 of the model outputs and \eqn{n} is the number of all the combinations of the
 input levels.  This approach can also be used on \R models that do not
-fit the required specifications.  }
+fit the required specifications.  
+
+}
 
 
 \references{Lamboni, M., Makowski, D., Monod, H., 2009. Multivariate
@@ -55,5 +57,5 @@ Lamboni, M., Makowski, D., Monod, H., 2009. Multivariate sensitivity
 
 Saltelli, A., Chan, K., Scott, E.M. eds, 2000. \emph{Sensitivity
 Analysis} Wiley, New York.  }
-\author{Matieyendou Lamboni <clamboni@yahoo.fr>, Herv\'{e} Monod <herve.monod@jouy.inra.fr>}
+\author{Matieyendou Lamboni <clamboni@yahoo.fr>, Herv\'{e} Monod <herve.monod@jouy.inra.fr>, Caroline Bidot <caroline.bidot@jouy.inra.fr>}
 

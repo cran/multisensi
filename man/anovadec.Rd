@@ -6,10 +6,10 @@ A function to compute sum of squares decomposition on principal
 components by using the aov function
 }
 \usage{
-anovadec(ACP, plan, ord.inter, nbcomp = 2)
+anovadec(Y, plan, ord.inter, nbcomp = 2)
 }
 \arguments{
-  \item{ACP}{data.frame of model output, usually the x component of a
+  \item{Y}{data.frame of model output, usually the x component of a
     PCA object}
   \item{plan}{data.frame of input design}
   \item{ord.inter}{ANOVA formula like \code{"A+B+c+A:B"}

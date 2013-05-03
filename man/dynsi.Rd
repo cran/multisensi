@@ -61,10 +61,13 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
  data(plan)
 # input Climate variables
  data(Climat)
- DYNSI <- dynsi(2, biomasse, plan, nb.outp=10, climdata=Climat)
+# output variables (precalculated to speed up the example)
+ data(biomasseY)
+#
+ DYNSI <- dynsi(2, biomasseY, plan, limdata=Climat)
  summary(DYNSI)
  print(DYNSI)
- plot(DYNSI)
+ plot(DYNSI, color=heat.colors)
  #graph.bar(DYNSI,col=1, beside=F)  # sensitivity bar plot
                                     # for the first output (col=1)
  #graph.bar(DYNSI,col=2, xmax=1)    #

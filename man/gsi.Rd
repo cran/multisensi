@@ -66,7 +66,11 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
  data(plan)
 # input climate variable
  data(Climat)
- GSI <- gsi(2, biomasse, plan, inertia=3, normalized=TRUE, cumul=FALSE, climdata=Climat)
+# output variables (precalculated to speed up the example)
+ data(biomasseY)
+#
+ GSI <- gsi(2, biomasseY, plan, inertia=3, normalized=TRUE, cumul=FALSE,
+            climdata=Climat)
  summary(GSI)
  print(GSI)
  plot(x=GSI, beside=FALSE)

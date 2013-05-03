@@ -1,0 +1,19 @@
+CHANGES IN 1.0-6 (2013-05-03)
+-----------------------------
+
+New Features
+- New options for plot.dynsi (arguments shade and color)
+- Faster examples by using a precalculated set of output variables of
+  the biomasse model (dataset biomasseY)
+
+CHANGES IN 1.0-5 (2013-03-29)
+-----------------------------
+
+Bug Fixes
+- Correct columns naming for calculation with one Principal Component, nbcomp=1, in anovadec().
+
+- Changes in plot.dynsi() to plot main sensitivity indices.
+
+New Features
+- Modify inputs and outputs of ACP() - internal function.
+

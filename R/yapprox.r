@@ -24,10 +24,7 @@
     Gsigma <- t(ynorm) %*% ynorm
 
     ##calcul de la trace de Gsigma ou de l'inertie des données
-    trace <- 0        #initialisation
-    for (k in 1:(length(Gsigma[1,]))) {
-        trace <- trace +  Gsigma[k,k]
-    }
+    trace <- sum(diag(Gsigma))
 
     return(list(Y=echsimul.app, trace=trace))
 }
