@@ -5,7 +5,7 @@
 
 
     ##     fact.interet1 <- fact.interet
-    ## Décomposition entre effets d'intérêt et autres
+    ## Decomposition entre effets d'interet et autres
     facteurs <- rownames(GSI$Att)
     fact.interet <- apply(outer(facteurs,fact.interet,"=="),1,any)
     if(sum(fact.interet)==1){

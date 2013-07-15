@@ -20,10 +20,11 @@ dynsi <- function(formula, model, factors, cumul=FALSE, simulonly=FALSE, nb.outp
     ## Objet de classe dynsi contenant
     ## X            : data.frame design of experiment (input sample)
     ## Y            : data.frame of model ouput output matrix (response)
-    ## S            ; data.frame of first order, two ... Sensitivity Indices (SI) on model outputs
-    ## St           : data.frame of total SI on model outputs
-    ## Si           : data.frame of principal SI on model outputs
-    ## Sinter       : data.frame of interraction SI on model outputs
+    ## SI           : data.frame of first order, two ... Sensitivity Indices (SI) on model outputs
+    ## tSI          : data.frame of total SI on model outputs
+    ## mSI          : data.frame of principal SI on model outputs
+    ## iSI          : data.frame of interaction SI on model outputs
+    ## Att          : 
 
 
     ##----------------------------------------------------------------
@@ -33,12 +34,12 @@ dynsi <- function(formula, model, factors, cumul=FALSE, simulonly=FALSE, nb.outp
     if(is.null(dim(factors))){
 
         ## Design
-        print("Design")
+        cat("[*] Design \n")
         factors <- planfact.as(factors)
     } else {
         if(is.null(dim(factors))==FALSE & is.data.frame(model)==FALSE){
             ## response simulation
-            print("Response simulation")
+            cat("[*] Response simulation \n")
             model <- simulmodel(model=model, plan=factors, nomFic=Name.File, ...)
             model <- data.frame(model)
             names(model) <-  paste("Y",1:ncol(model),sep="")
@@ -48,20 +49,21 @@ dynsi <- function(formula, model, factors, cumul=FALSE, simulonly=FALSE, nb.outp
 
     if(simulonly==FALSE){
 
-        if(is.null(nb.outp)==FALSE){nbcomp <- min(nb.outp,ncol(model) ) }
-        else {nbcomp <- ncol(model)}
+        #if(is.null(nb.outp)==FALSE){nbcomp <- min(nb.outp,ncol(model) ) }
+        #else {nbcomp <- ncol(model)}
+	nbcomp <- min(nb.outp,ncol(model)) #a priori suffisant pas besoin de if is.null
 
         ##-------------------------------------------------------------
         ##     ANOVAs Analysis on nbcomp sorties
         ##-------------------------------------------------------------
-        print("ANOVAs Analysis")
+        cat("[*] ANOVAs Analysis \n")
         ANO <- anovadec(model,factors,formula,nbcomp)
 
 
         ##--------------------------------------------------------------------
         ##Sensitivity Indices on nbcomp PC and GSA
         ##-------------------------------------------------------------------
-        print("Sensitivity Indices")
+        cat("[*] Sensitivity Indices \n")
         ASG <- anoasg(ANO, nbcomp)
 
         result <- list(X=factors,

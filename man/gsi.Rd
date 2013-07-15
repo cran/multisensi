@@ -39,14 +39,26 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
   the following components:
   \item{X}{a data.frame containing the experimental design (input samples)}
   \item{Y}{a data.frame containing the output matrix (response)}
+  \item{H}{a data.frame containing the principal components}
+  \item{L}{a data.frame whose columns contain the basis eigenvectors (the variable loadings)}
+  \item{lambda}{the variances of the principal components}
+  \item{inertia}{vector of inertia percentages per PCs and global criterion}
+  \item{cor}{a data.frame of correlation between PCs and outputs}
   \item{SI}{a data.frame containing  the Sensitivity Indices (SI) on PCs
     and the Generalized SI (GSI)}
   \item{mSI}{a data.frame of first order SI on PCs and first order GSI}
   \item{tSI}{a data.frame containing the total SI on PCs and the total GSI}
   \item{iSI}{a data.frame of interaction SI on PCs and interaction GSI}
-  \item{cor}{a data.frame of correlation between PCs and outputs}
-  \item{inertia}{vector of inertia per PCs and global criterion}
+  \item{pred}{a data.frame containing the output predicted by the
+    metamodel arising from the PCA and anova decompositions}
+  \item{residuals}{a data.frame containing the residuals between actual
+    and predicted outputs}
   \item{Rsquare}{vector of dynamic coefficient of determination}
+  \item{Att}{0-1 matrix of association between input factors and
+    factorial terms in the anovas}
+  \item{normalized}{logical value, see the arguments}
+  \item{cumul}{logical value, see the arguments}
+  ...
 }
 \references{
   M. Lamboni, D. Makowski and H. Monod, 2009. Multivariate

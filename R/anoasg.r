@@ -12,11 +12,11 @@ anoasg <- function(ANO,nbcomp=2)
 
 
     ##---------------------------------------------------------------------------
-    ## PRELIMINAIRES: récupération des résultats d'anova
+    ## PRELIMINAIRES: recuperation des resultats d'anova
     ##---------------------------------------------------------------------------
-    ## aov.df: vecteur des Degrés de Liberté, résiduelle comprise
-    ## aov.ss: vecteur des Sommes de Carrés, résiduelle comprise
-    ## aov.cm: vecteur des Carrés Moyens, résiduelle comprise
+    ## aov.df: vecteur des Degres de Liberte, residuelle comprise
+    ## aov.ss: vecteur des Sommes de Carres, residuelle comprise
+    ## aov.cm: vecteur des Carres Moyens, residuelle comprise
 ######## ATTENTION ########
     ## sous S:
     ##aov.summ <- summary(aov.obj)
@@ -39,15 +39,15 @@ anoasg <- function(ANO,nbcomp=2)
     tss <- apply(tab, 2, sum)
 
     aov.obj <-  ANO$aov[[1]]
-    ## indic.fact: matrice 0-1 de correspondance facteurs*termes-du-modèle
+    ## indic.fact: matrice 0-1 de correspondance facteurs*termes-du-modele
     indic.fact <- attr(aov.obj$terms,"factors")[-1,]
     filtre.main <- apply(indic.fact,2,sum)==1
     rdf <-  aov.obj$df.residual
     if(rdf>0){ tab <- tab[-nrow(tab),]}
-    if(ncol( indic.fact)!=nrow(tab)) { stop("Too small  design for estimate all factorial terms")}
+    if(ncol( indic.fact)!=nrow(tab)) { stop("Too small design for estimate all factorial terms")}
 
     ##---------------------------------------------------------------------------
-    ##affichage des indices de sensibilité
+    ##affichage des indices de sensibilite
     ##-------------------------------------------------------------------------
     indices <- as.data.frame(matrix(0,nrow(tab),ncol(tab)))
     rownames(indices) <-rownames(tab)

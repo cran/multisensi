@@ -1,8 +1,8 @@
 `planfact` <- function(nb.niv,make.factor=TRUE)
 {
-    ## génère un plan factoriel complet dans l'ordre lexicographique
+    ## genere un plan factoriel complet dans l'ordre lexicographique
     ## ENTREES
-    ## nb.niv: vecteur composé des nombres de niveaux de chaque facteur
+    ## nb.niv: vecteur compose des nombres de niveaux de chaque facteur
     ## SORTIE
     ## un "dataframe" dont les colonnes sont des facteurs au sens Splus
 

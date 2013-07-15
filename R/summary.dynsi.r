@@ -12,9 +12,10 @@ summary.dynsi <-function(object, ...)
 
     cat("\n dynsi outputs \n")
     output <- c("X","Y","SI","mSI","tSI","iSI")
-    names(output) <- c("Design","response","Indices","Main indices","Total indices","Interaction indices")
+    names(output) <- c("Design","Response","Indices","Main indices","Total indices","Interaction indices")
 
-    cat("\n value names:", output ,"\n")
+    #cat("\n value names:", output ,"\n")
+    print(output)
 
 }
 

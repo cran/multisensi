@@ -28,7 +28,7 @@ graph.bar <-function(x, col=1, nb.plot=15,xmax=NULL, beside=TRUE, ...)
                           beside=beside,
                           las=2,
                           cex.axis=2,
-                          cex.names=1.5,
+                          cex.names=1,#1.5,
                           xlim=c(0,xmax),
                           ...))
     } else {
@@ -40,7 +40,7 @@ graph.bar <-function(x, col=1, nb.plot=15,xmax=NULL, beside=TRUE, ...)
                           beside=beside,
                           las=2,
                           cex.axis=2,
-                          cex.names=1.5,
+                          cex.names=1,#1.5,
                           xlim=c(0,xmax),
                           ...))
     }

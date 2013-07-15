@@ -53,9 +53,10 @@ fit the required specifications.
 Lamboni, M., Makowski, D., Monod, H., 2009. Multivariate sensitivity
     analysis to measure global contribution of input factors in dynamic
     models (submitted in october 2009 to Reliability
-    Engineering \& System Safety
+    Engineering & System Safety)
 
 Saltelli, A., Chan, K., Scott, E.M. eds, 2000. \emph{Sensitivity
 Analysis} Wiley, New York.  }
-\author{Matieyendou Lamboni <clamboni@yahoo.fr>, Herv\'{e} Monod <herve.monod@jouy.inra.fr>, Caroline Bidot <caroline.bidot@jouy.inra.fr>}
+
+\author{Matieyendou Lamboni <clamboni@yahoo.fr>, Herv\'e Monod <herve.monod@jouy.inra.fr>, Caroline Bidot <caroline.bidot@jouy.inra.fr>}
 

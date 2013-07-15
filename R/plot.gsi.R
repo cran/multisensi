@@ -10,7 +10,7 @@ plot.gsi <-
     ##if(is.null(graph)==FALSE && graph>3) {graph <- NULL}
 
     if(1 %in% graph){
-        x11()
+        dev.new();
         ## Correlation graph and main and total sensitivity indices bars on PCs
         graph.pc(x,
                  nb.plot=nb.plot,
@@ -21,7 +21,7 @@ plot.gsi <-
     }
 
     if(2 %in% graph){
-        x11()
+        dev.new();
         ## Generalized main and total sensitivity indices bars
         graph.bar(x,
                   ncol(x$tSI),
@@ -32,7 +32,7 @@ plot.gsi <-
     }
 
     if(3 %in% graph){
-        x11()
+        dev.new();
         ## Dynamic coefficient of determination
       plot(x$Rsquare,
            ylim=c(0,1),

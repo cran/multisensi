@@ -1,28 +1,28 @@
 simulmodel <- function(model,plan,nomFic=NULL,verbose=FALSE,...)
 {
-    ## simulations des sorties du modèle selon le plan
+    ## simulations des sorties du modele selon le plan
 
     ##ENTREES
-    ## nomFic est le nom du fichier où se trouve le modèle
+    ## nomFic est le nom du fichier ou se trouve le modele
     ##        (A entrer entre guillemets).
     ## model est la fonction renvoyant la sortie du
-    ##         modèle(Pas de guillemets).
-    ## plan est le plan d'expérience ou d'échantillonnage sous forme de data.frame
+    ##         modele(Pas de guillemets).
+    ## plan est le plan d'experience ou d'echantillonnage sous forme de data.frame
 
 
     ##SORTIES
     ##matrice de simulations des sortie sous forme array:  V
     ##Plan de simulations plan sous forme de data.frame : plan
 
-    ## Chargement du fichier contenant le modèle
+    ## Chargement du fichier contenant le modele
 
     if(!is.null(nomFic)){ source(nomFic)}
 
-    ## Renvoi de toutes les sorties du modèle sous forme de liste.
-    ## La taille de la liste est la même
-    ## que celle du plan factoriel, et chaque élément de la liste
-    ## est la sortie du modèle (de la taille
-    ## de la série temporelle renvoyée par le modèle).
+    ## Renvoi de toutes les sorties du modele sous forme de liste.
+    ## La taille de la liste est la meme
+    ## que celle du plan factoriel, et chaque element de la liste
+    ## est la sortie du modele (de la taille
+    ## de la serie temporelle renvoyee par le modele).
 
     U <- NULL
 

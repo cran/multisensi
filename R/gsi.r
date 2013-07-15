@@ -37,7 +37,7 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
   ## pred         :
   ## residuals    :
   ## Rsquare      : vector of dynamic coefficient of determination
-  ## Att          : matrice 0-1 de correspondance facteurs*termes-du-modèle
+  ## Att          : matrice 0-1 de correspondance facteurs*termes-du-modele
   ## normalized   : logical value used for normalized
   ## cumul        : logical value used for cumul
  
@@ -50,7 +50,7 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
   ##   => if case 1, then a factorial design is constructed
   ##      else, go to STEP 2
   if(is.null(dim(factors))){
-    print("Design")
+    cat("[*] Design \n")
     factors <- planfact.as(factors)
   }
 
@@ -63,7 +63,7 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
   ##      else, go to next step
   if(is.data.frame(model)==FALSE){
     ## response simulation
-    print("Response simulation")
+    cat("[*] Response simulation \n")
     model <- simulmodel(model=model, plan=factors, nomFic=Name.File, ...)
   }
    
@@ -81,32 +81,32 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
     return(list(X=factors,Y=model))
   }
   
-  print("Principal Component Analysis")
+  cat("[*] Principal Component Analysis \n")
   ACP1 <- ACP(model,inertia,normalized)
     
   ##-------------------------------------------------------------
   ##  STEP 4 : ANOVAs Analysis on nbcomp Principal Component (PC)
   ##-------------------------------------------------------------
-  print("ANOVAs Analysis")
-  ANO <- anovadec(ACP1$x,factors,formula,ACP1$nbcomp)
+  cat("[*] ANOVAs Analysis \n")
+  ANO <- anovadec(ACP1$H,factors,formula,ACP1$nbcomp)
   
   ##-------------------------------------------------------------
   ##  STEP 5 : Goodness of fit computing
   ##-------------------------------------------------------------
-  print("Goodness of fit computing")
+  cat("[*] Goodness of fit computing \n")
   Yapp <- yapprox(ACP1, ACP1$nbcomp, ANO)
-  qual.app <- quality(model, Yapp$Y, normalise=normalized)
+  qual.app <- quality(model, Yapp, normalise=normalized)
   
   ##--------------------------------------------------------------------
   ##  STEP 6 ; Sensitivity Indices on nbcomp PC and GSI
   ##-------------------------------------------------------------------
-  print("Sensitivity Indices")
-  ASG <- asg(ANO, ACP1, Yapp$trace, ACP1$nbcomp)
+  cat("[*] Sensitivity Indices \n")
+  ASG <- asg(ANO, ACP1, ACP1$trace, ACP1$nbcomp)
   
   result <- list(X=factors,
                  Y=as.data.frame(model),
-                 H=as.data.frame(ACP1$x[,1:ACP1$nbcomp]),
-                 L=as.data.frame(ACP1$rotation[,1:ACP1$nbcomp]),
+                 H=as.data.frame(ACP1$H[,1:ACP1$nbcomp,drop=FALSE]),
+                 L=as.data.frame(ACP1$L[,1:ACP1$nbcomp,drop=FALSE]),
                  lambda=((ACP1$sdev)^2)[1:ACP1$nbcomp],
                  inertia= ASG$inertia,
                  cor=ASG$cor,
@@ -114,8 +114,8 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
                  mSI=ASG$mSI,
                  tSI= ASG$tSI,
                  iSI= ASG$iSI,
-                 pred=as.data.frame(Yapp$Y),
-                 residuals=as.data.frame(model)-as.data.frame(Yapp$Y),
+                 pred=as.data.frame(Yapp),
+                 residuals=as.data.frame(model)-as.data.frame(Yapp),
                  Rsquare= qual.app$coef.det,
                  Att=ASG$indic.fact,
                  normalized=normalized,

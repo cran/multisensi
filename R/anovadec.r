@@ -1,22 +1,22 @@
 anovadec <- function(Y, plan, ord.inter, nbcomp=2){
-  ##execute l'ANOVA sur chaque CP et récupère la prédiction après l'estimation via ANOVA
+  ##execute l'ANOVA sur chaque CP et recupere la prediction apres l'estimation via ANOVA
   
   ##ENTREES
   ## Y:          : data.frame of model output
   ## plan:         : data.frame of input design
   ## ord.inter:    : prend des valeurs numeriques (1= pas d'interaction);2=interaction
-  ##                 d'ordre 2...)  ou une formule alphanumerique souhaitée sous la
+  ##                 d'ordre 2...)  ou une formule alphanumerique souhaitee sous la
   ##                 forme " A+B+C+A*B+A*c+..."
-  ##                 par defaut on considère les interactions d'ordre 2.
+  ##                 par defaut on considere les interactions d'ordre 2.
   ## nbcomp        : nombre de CP sur lesquels s'effectueront les ANOVA
   
   ##SORTIE
   ## Liste contenant les composants
   ##  aov     : liste d'objets aov sur les composantes principales
-  ##  PC      : contient la prédiction des CP après l'ANOVA sous forme de ARRAY
-  ## Renvoi des coordonnées dans les deux premières composantes principales
+  ##  PC      : contient la prediction des CP apres l'ANOVA sous forme de ARRAY
+  ## Renvoi des coordonnees dans les deux premieres composantes principales
   
-  coordplan <- Y[,1:nbcomp]
+  coordplan <- Y[,1:nbcomp,drop=FALSE]
   nomsPC <- paste("PC",1:nbcomp,sep="")
   
   ## Mise sous forme de facteurs des variables du plan factoriel
@@ -26,22 +26,22 @@ anovadec <- function(Y, plan, ord.inter, nbcomp=2){
       ##        contrasts(plan[,i]) <- contr.poly(nlevels(plan[,i]))
     }
   
-  ## Dataframe nécessaire à l'analyse de variance
+  ## Dataframe necessaire a l'analyse de variance
   Y.data <- data.frame(cbind(plan,coordplan))
   names(Y.data)[seq(from=ncol(plan)+1,to=ncol(plan)+nbcomp,by=1)]=nomsPC
 
-  ## Formules de l'analyse de variance sur la première et la deuxième composantes principales
+  ## Formules de l'analyse de variance sur la premiere et la deuxieme composantes principales
   
-  ## Somme des variables dans le cas où la formule n'est pas donnée.
+  ## Somme des variables dans le cas ou la formule n'est pas donnee.
   if(is.numeric(ord.inter)){
-    ## cas où l'on introduit une valeur numerique pour ord.inter
+    ## cas ou l'on introduit une valeur numerique pour ord.inter
     form <- paste(names(Y.data[1:ncol(plan)]),collapse="+")
     if(ord.inter==1){
       formule.drt <- form
     } else{
       formule.drt <- paste(paste("(",form,")",sep=""),ord.inter,sep="^")
     }
-  } else{           ##cas où on introduit une formule
+  } else{           ##cas ou on introduit une formule
     if(is.character(ord.inter)){
       formule.drt <- ord.inter
     } else{
@@ -49,10 +49,10 @@ anovadec <- function(Y, plan, ord.inter, nbcomp=2){
     }
   }
   
-  ## initialisation du vecteur  des sorties de  prédictions issues de l'ANOVA
+  ## initialisation du vecteur  des sorties de  predictions issues de l'ANOVA
   PC.predict <- array(0,dim=c(length(Y[,1]),nbcomp))
   
-  ## Analyses de variance et recupération de la prediction
+  ## Analyses de variance et recuperation de la prediction
   YaovPC <- list()
   for(i in 1:nbcomp)
     {

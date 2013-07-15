@@ -1,3 +1,12 @@
+CHANGES IN 1.0-7 (2013-07-15)
+-----------------------------
+
+Bug Fixes
+- Changes in plot.gsi to open new device in a portable way.
+
+New Features
+- Modify inputs and outputs of ACP and yapprox - internal functions.
+
 CHANGES IN 1.0-6 (2013-05-03)
 -----------------------------
 
@@ -11,7 +20,6 @@ CHANGES IN 1.0-5 (2013-03-29)
 
 Bug Fixes
 - Correct columns naming for calculation with one Principal Component, nbcomp=1, in anovadec().
-
 - Changes in plot.dynsi() to plot main sensitivity indices.
 
 New Features

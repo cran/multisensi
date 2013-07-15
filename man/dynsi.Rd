@@ -64,7 +64,7 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
 # output variables (precalculated to speed up the example)
  data(biomasseY)
 #
- DYNSI <- dynsi(2, biomasseY, plan, limdata=Climat)
+ DYNSI <- dynsi(2, biomasseY, plan)
  summary(DYNSI)
  print(DYNSI)
  plot(DYNSI, color=heat.colors)

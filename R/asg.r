@@ -13,11 +13,11 @@ asg <- function(ANO, ACP, sigma.car, nbcomp=2)
 
 
     ##---------------------------------------------------------------------------
-    ## PRELIMINAIRES: récupération des résultats d'anova
+    ## PRELIMINAIRES: recuperation des resultats d'anova
     ##---------------------------------------------------------------------------
-    ## aov.df: vecteur des Degrés de Liberté, résiduelle comprise
-    ## aov.ss: vecteur des Sommes de Carrés, résiduelle comprise
-    ## aov.cm: vecteur des Carrés Moyens, résiduelle comprise
+    ## aov.df: vecteur des Degres de Liberte, residuelle comprise
+    ## aov.ss: vecteur des Sommes de Carres, residuelle comprise
+    ## aov.cm: vecteur des Carres Moyens, residuelle comprise
     ## ATTENTION ########
     ## sous S:
     ##aov.summ <- summary(aov.obj)
@@ -36,7 +36,7 @@ asg <- function(ANO, ACP, sigma.car, nbcomp=2)
             tab[,k] <-aov.summ[,"Sum Sq"]
         }}
 
-    ## ccalcul de la somme des  SC sur  les nbcomp CP pour chaque paramètre(SCa).
+    ## ccalcul de la somme des  SC sur  les nbcomp CP pour chaque parametre(SCa).
     if(nbcomp>1){
         somme.ss <- apply(tab, 1, sum)
     } else {somme.ss <- tab[,1]}
@@ -45,14 +45,14 @@ asg <- function(ANO, ACP, sigma.car, nbcomp=2)
     tss <- apply(tab, 2, sum)
     ##	 print(sum(tab[,4]))
     aov.obj <-	ANO$aov[[1]]
-    ## indic.fact: matrice 0-1 de correspondance facteurs*termes-du-modèle
+    ## indic.fact: matrice 0-1 de correspondance facteurs*termes-du-modele
     indic.fact <- attr(aov.obj$terms,"factors")[-1,]
     filtre.main <- apply(indic.fact,2,sum)==1
     rdf <-  aov.obj$df.residual
     if(rdf>0){ tab <- tab[-nrow(tab),]}
-    if(ncol( indic.fact)!=nrow(tab)) { stop("Too small	design for estimate all factorial terms")}
+    if(ncol( indic.fact)!=nrow(tab)) { stop("Too small design for estimate all factorial terms")}
 
-    ## calcul du crirère global de la qualité de m'approximation
+    ## calcul du crirere global de la qualite de m'approximation
 
     ##	  print(sum(tab[,4]))
     ##	  print(sigma.car)
@@ -62,7 +62,7 @@ asg <- function(ANO, ACP, sigma.car, nbcomp=2)
     inertia <- (c(cumsum(tss[1:nbcomp])/sigma.car, GC))*100
 
     ##---------------------------------------------------------------------------
-    ##affichage des indices de sensibilité
+    ##affichage des indices de sensibilite
     ##-------------------------------------------------------------------------
     indices <- as.data.frame(matrix(0,nrow(tab),ncol(tab)))
     rownames(indices) <-rownames(tab)
@@ -91,7 +91,7 @@ asg <- function(ANO, ACP, sigma.car, nbcomp=2)
 
 
     ##---------------------------------------------------------------------------------------
-    ## calcul de corrélations entre les différentes Cp avec les sorties
+    ## calcul de correlations entre les differentes Cp avec les sorties
     ##--------------------------------------------------------------------------------------
 
     ecart.type <- ACP$sdev[1:nbcomp]
@@ -102,7 +102,7 @@ asg <- function(ANO, ACP, sigma.car, nbcomp=2)
         EcartTypeMat	<- diag( ecart.type[1:nbcomp] )
     }
 
-    correlation <-as.data.frame( ACP$rotation[,1:nbcomp]%*%EcartTypeMat)
+    correlation <-as.data.frame( ACP$L[,1:nbcomp,drop=FALSE]%*%EcartTypeMat)
     colnames( correlation) <-  paste("PC",1:nbcomp,sep="")
 
     return(list(SI=indices,

@@ -14,10 +14,10 @@ summary.gsi <- function(object, ...)
     print( tSI[ rev( order(tSI[,ncol(tSI)]) ) , ], ... )
 
     cat("\n gsi outputs \n")
-    output <- c("X","Y","SI","tSI","iSI","cor","inertia","Rsquare ")
-    names(output) <- c("Design","response","Indices","Total indices","Interaction indices","Correlation","Inertia","Rsquare ")
+    output <- c("X", "Y", "H", "L", "lambda", "SI", "mSI", "tSI", "iSI", "cor", "inertia", "Rsquare")
+    names(output) <- c("Design", "Response", "Principal Components", "Loadings", "PCs variances", "Indices", "First order indices", "Total indices", "Interaction indices", "Correlation", "Inertia", "Rsquare")
 
-    cat("\n value names:", output ,"\n")
-
+    #cat("\n value names:", output ,"\n")
+    print(output)
 }
 

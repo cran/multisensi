@@ -8,15 +8,11 @@ A function that predicts the model output after PCA and aov analyses
 yapprox(ACP, nbcomp = 2, aov.obj)
 }
 \arguments{
-  \item{ACP}{prcomp object}
+  \item{ACP}{ACP object}
   \item{nbcomp}{number of PCs}
   \item{aov.obj}{aov object}
 }
-\value{A list with components
-  \describe{
-  \item{Y}{model output predictions}
-  \item{trace}{model output inertia}
-  }
- }
+\value{model output predictions}
+  
 \note{This is essentially an internal function for the multisensi package}
 \author{M. LAMBONI}
