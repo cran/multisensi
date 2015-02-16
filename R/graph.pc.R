@@ -1,4 +1,4 @@
-graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, ...)
+graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, type="l",...)
 {
     ##x :          GSI objects
     ##nb.plot:       A number decribing the max number of factor bars to be ploted
@@ -39,7 +39,7 @@ graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, ...)
 
 
     for (k in 1:nbcomp){
-        plot(toPlot[,k], ylim=c(corrmin, corrmax) , type="l", col="blue", main= main.comp[k], xlab="time", ylab=toWrite, lwd=3 ,cex.axis=2 ,cex=4, ...)
+        plot(toPlot[,k], ylim=c(corrmin, corrmax) , type=type, col="blue", main= main.comp[k],  ylab=toWrite, lwd=3 ,cex.axis=2 ,cex=4, ...)#xlab="time",
         abline(h=0)
     }
 

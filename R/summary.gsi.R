@@ -10,7 +10,7 @@ summary.gsi <- function(object, ...)
     print( mSI[ rev( order(mSI[,ncol(mSI)]) ) , ], ... )
 
     cat("\n Total sensitivity indices \n")
-    tSI <- object$mSI
+    tSI <- object$tSI
     print( tSI[ rev( order(tSI[,ncol(tSI)]) ) , ], ... )
 
     cat("\n gsi outputs \n")

@@ -24,10 +24,13 @@ anoasg <- function(ANO,nbcomp=2)
     ## sous R:
 
     aov.summ <- summary( ANO$aov[[1]])[[1]]
+    facterms.names <- rownames(aov.summ)
     aov.ss <- aov.summ[,"Sum Sq"]
+    # tab au depart de taille (nb de termes factoriels + 1 (residus)) x nbcomp
+    # contains the sums of squares of fatorial term i for output j : tab_{w,k}=SS_{w,k}
     tab <-as.data.frame( matrix(0,length(aov.ss),nbcomp))
     colnames(tab) <- paste("Y",1:nbcomp,sep="")
-    rownames(tab) <-  rownames(aov.summ)
+    rownames(tab) <- facterms.names #rownames(aov.summ)
     tab[,1] <- aov.ss
 
     if(nbcomp>1){
@@ -36,32 +39,33 @@ anoasg <- function(ANO,nbcomp=2)
             tab[,k] <-aov.summ[,"Sum Sq"]
         }}
 
-    tss <- apply(tab, 2, sum)
+    # tss vecteur des sommes des carres totales par Yi
+    tss <- colSums(tab) #apply(tab, 2, sum)
 
     aov.obj <-  ANO$aov[[1]]
     ## indic.fact: matrice 0-1 de correspondance facteurs*termes-du-modele
     indic.fact <- attr(aov.obj$terms,"factors")[-1,]
-    filtre.main <- apply(indic.fact,2,sum)==1
-    rdf <-  aov.obj$df.residual
-    if(rdf>0){ tab <- tab[-nrow(tab),]}
+    filtre.main <- colSums(indic.fact)==1 #apply(indic.fact,2,sum)==1
+    rdf <-  aov.obj$df.residual # degres de liberte sur les residus
+    if(rdf>0){ tab <- tab[-nrow(tab),]} # la derniere ligne de tab contient les residus on l'enleve si besoin
     if(ncol( indic.fact)!=nrow(tab)) { stop("Too small design for estimate all factorial terms")}
 
     ##---------------------------------------------------------------------------
     ##affichage des indices de sensibilite
     ##-------------------------------------------------------------------------
     indices <- as.data.frame(matrix(0,nrow(tab),ncol(tab)))
-    rownames(indices) <-rownames(tab)
-    colnames(indices) <-  paste("Y",1:(ncol(tab)),sep="")
+    rownames(indices) <- rownames(tab)
+    colnames(indices) <- paste("Y",1:(ncol(tab)),sep="")
 
     indices.tot <- as.data.frame(matrix(0,nrow(indic.fact),ncol(tab)))
     rownames( indices.tot) <- rownames(indic.fact)
-    colnames( indices.tot) <-  colnames(indices)
+    colnames( indices.tot) <- colnames(indices)
 
     indices.main <- indices.tot
-
-    indices.inter <-  as.data.frame(matrix(0,nrow(indic.fact),ncol(tab)))
-    rownames(indices.inter) <-  rownames(indic.fact)
-    colnames(indices.inter) <- colnames(indices)
+    indices.inter <- indices.tot
+#    indices.inter <-  as.data.frame(matrix(0,nrow(indic.fact),ncol(tab)))
+#    rownames(indices.inter) <-  rownames(indic.fact)
+#    colnames(indices.inter) <- colnames(indices)
 
     for(k in 1:ncol(tab)){
 

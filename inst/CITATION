@@ -4,12 +4,10 @@ citHeader("'multisensi' is an R package to perform sensitivity analysis
         'multisensi' for research, please acknowledge at least one of them
         in your publications:")
 
-desc <- packageDescription("multisensi")
-year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", desc$Date)
-vers <- paste("R package version", desc$Version)
-url <- desc$URL
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
+url <- meta$URL
      
-
 citEntry(entry="Article",
   author = personList(as.person("Matieyendou Lamboni"),
            as.person("David Makowski"), as.person("Simon Lehuger"),

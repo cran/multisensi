@@ -1,5 +1,5 @@
 plot.gsi <-
-    function(x, nb.plot=10, nb.comp=3, graph=1:3, xmax=NULL, beside=TRUE, ...)
+    function(x, nb.plot=10, nb.comp=3, graph=1:3, xmax=NULL, beside=TRUE, type="l",...)
 {
 
     ## x:         GSI object
@@ -17,6 +17,7 @@ plot.gsi <-
                  nb.comp=nb.comp,
                  xmax=xmax,
                  beside=beside,
+                 type=type,
                  ...)
     }
 
@@ -37,6 +38,7 @@ plot.gsi <-
       plot(x$Rsquare,
            ylim=c(0,1),
            ylab="Rsquare",
+           type=type,
            ...)
     }
 }

@@ -1,2 +1,9 @@
 # Export all names
 exportPattern(".")
+
+S3method(plot, dynsi)
+S3method(plot, gsi)
+S3method(print, dynsi)
+S3method(print, gsi)
+S3method(summary, dynsi)
+S3method(summary, gsi)

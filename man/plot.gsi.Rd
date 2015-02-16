@@ -6,7 +6,7 @@
 }
 \usage{
 \method{plot}{gsi}(x, nb.plot = 10, nb.comp = 3, graph = 1:3, xmax=NULL,
-                   beside=TRUE,...)
+                   beside=TRUE,type="l",...)
 }
 \arguments{
   \item{x}{a gsi object}
@@ -18,6 +18,7 @@
     wants to keep default values}
   \item{beside}{if TRUE, the main and total sensitivity indices are
     represented by two bars; if FALSE, they are represented by the same bar}
+  \item{type}{what type of plot should be drawn for correlation graph ("l" for lines)}
   \item{...}{graphical parameters}
 }
 \seealso{\code{\link{gsi}}}

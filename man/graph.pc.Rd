@@ -7,7 +7,7 @@
 }
 \usage{
 graph.pc(x, nb.plot = 15, nb.comp = NULL, xmax = NULL,
-         beside = TRUE, ...)
+         beside = TRUE, type="l", ...)
 }
 \arguments{
   \item{x}{gsi object}
@@ -18,6 +18,7 @@ graph.pc(x, nb.plot = 15, nb.comp = NULL, xmax = NULL,
     wants to keep default values}
   \item{beside}{if TRUE, the main and total sensitivity indices are
     represented by two bars; if FALSE, they are represented by the same bar}
+  \item{type}{what type of plot should be drawn for correlation graph ("l" for lines)}
   \item{...}{graphical parameters}
 }
 \author{M. LAMBONI}
