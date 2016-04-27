@@ -15,4 +15,4 @@ data(biomasseY)
 dim(biomasseY)
 }
 \keyword{datasets}
-\seealso{\code{\link{biomasse}},\code{\link{plan}}}
+\seealso{\code{\link{biomasse}}, \code{\link{biomasseX}}}

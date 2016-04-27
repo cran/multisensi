@@ -11,5 +11,5 @@
   \item{x}{a gsi object}
   \item{...}{print parameters}
 }
-\seealso{\code{\link{gsi}}}
-\author{ M. LAMBONI}
+\seealso{\code{\link{gsi}}, \code{\link{multisensi}}}
+\author{ M. Lamboni}

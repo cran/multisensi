@@ -11,5 +11,5 @@
   \item{x}{a dynsi object}
   \item{...}{print parameters}
 }
-\seealso{\code{\link{dynsi}}}
-\author{ M. LAMBONI}
+\seealso{\code{\link{dynsi}}, \code{\link{multisensi}}}
+\author{M. Lamboni}

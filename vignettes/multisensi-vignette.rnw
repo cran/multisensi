@@ -1,0 +1,378 @@
+
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{epic,latexsym,amsmath,amsfonts}
+\usepackage{graphicx} 
+\usepackage{epsfig}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{url}
+\usepackage{a4wide}
+\usepackage{color}
+\usepackage{float}
+
+\newcommand{\multisensi}{\textsf{multisensi}}
+\newcommand{\sensitivity}{\textsf{sensitivity}}
+\newcommand{\etal}{\emph{et al.}}
+
+\def\R{\mathbb{R}} 
+\def\C{\mathbb{C}} 
+\def\Z{\mathbb{Z}}
+\def\N{\mathbb{N}} 
+\def\1{\mathbf{1}}
+
+\def\Im{\mathop{\rm Im}}
+\def\Ia{\mathop{\rm I1}}
+\def\Ib{\mathop{\rm I2}}
+\newcommand{\bul}{{\mbox{\huge.}}}
+
+\parindent=10mm
+\def\vs{\vspace{3mm}}
+\floatplacement{figure}{H}
+%---------------------------------------------------------------------------
+\begin{document}
+%---------------------------------------------------------------------------
+
+<<setup, include=FALSE, cache=FALSE>>=
+library(knitr)
+opts_chunk$set(fig.path='figure/multisensi-vignette-')
+options(formatR.arrow=TRUE, width=68)
+knit_hooks$set(close.dev = function(before, options, envir) {
+    if (!before) graphics.off()})
+@
+% element retires du setup
+%engine='R'
+%set.seed(123)
+
+%---------------------------------------------------------------------------
+\title{A quick guide to \multisensi, an R package for multivariate sensitivity analyses} 
+
+
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Quick guide}
+%!\VignetteEncoding{UTF-8}
+\author{Caroline Bidot, Hervé Monod, Marie-Luce Taupin  \\[2mm] 
+MaIAGE, INRA, Université Paris-Saclay, 78350 Jouy-en-Josas, France}
+\date{\today}
+\maketitle
+\tableofcontents
+\medskip
+
+
+%---------------------------------------------------------------------------
+\section{Introduction}
+%-----------------------------------------------------------------------
+Global sensitivity analysis is an essential tool for modelers in all application areas. Its aim is to quantify and compare the influence of uncertain parameters (or other input variables) on the output of a given model. There exist many different methods to perform sensitivity analysis, but they are usually restricted to a single output variable. On the contrary, the R package \multisensi\ is specifically designed to perform global sensitivity analyses on a multivariate model output. It calculates and represents graphically sensitivity indices on each output variable or on combinations of output variables arising from dimension reduction techniques.
+
+The initial version of \multisensi\ was based on the combination of \emph{(i)} a factorial design on the uncertain model parameters; \emph{(ii)} the application of principal components analysis on the model output; \emph{(iii)} anova-based sensitivity analyses on the first principal components. This idea was proposed by Campbell \etal\ \cite{campbell06} and further studied by Lamboni \etal\ \cite{lammon11} (see also \cite{xiali16}). It is still implemented in \multisensi, but the present version includes alternative methods to perform the dimension reduction~: splines, bsplines and polynomial regression. In addition, several methods of global sensitivity analysis can now be used, including those implemented in the package \sensitivity\ \cite{pujioo15}.
+
+Applications in agronomy and epidemiology are presented by Lamboni \etal\ \cite{lammak09} and Lurette \etal\ \cite{lurtou09}. For a detailed introduction to the methods of global sensitivity analysis, we refer to Saltelli \etal\ \cite{saltelli08} and Faivre \etal\ \cite{faivre13} (in French). Multivariate techniques are presented, for example, in James \etal\ \cite{james13}. 
+
+%---------------------------------------------------------------------------
+\section{Case study: the Verhulst model of population dynamics}
+%---------------------------------------------------------------------------
+In the following, we illustrate the methods implemented in \multisensi\ using a very simple model, the dynamic population model of Verhulst. 
+
+\paragraph{Case study specifications} 
+The Verhulst model is given by the equation
+\begin{equation*}
+Y_t = \frac{K}{1 + (K/Y_0 - 1) \exp(-at)},
+\end{equation*}
+where $Y_t$ is the population size at time $t$ and $Y_0$, $K$, $a$ are respectively the initial size, the carrying capacity and the rate of maximum population growth. The aim in our case study is to evaluate the influence of these three parameters on the population sizes until time $T=100$. For this, simulated population sizes are recorded at times $5, 10, \cdots, 100$. The parameter uncertainty ranges of interest are assumed to be $(100, 1000)$ for $K$, $(1,40)$ for $Y_0$, $(0.05,0.2)$ for $a$.
+
+\paragraph{Model implementation}
+The R function \texttt{verhulst} is created to run the model for given values of $K$, $a$, $Y_0$ and for a vector $t$ of output times. The output of \texttt{verhulst} is the vector of population sizes at the times in $t$.
+<<ME, echo=TRUE, tidy=TRUE>>=
+verhulst <- function(K, Y0, a, t){
+    output <- K / (1 + (K/Y0-1)*exp(-a*t))
+    return(output) }
+@ 
+\noindent
+Since the methods implemented in \multisensi\ require to run the dynamic population model repeatedly, another function called \texttt{verhulst2} is created. It takes a dataframe of input combinations as its first argument and the time steps of interest as its second argument..
+<<MEmulti, echo=TRUE, tidy=TRUE>>=
+T <- seq(from=5, to=100, by=5)
+verhulst2 <- function(X, t=T){
+    out <- matrix(nrow=nrow(X), ncol=length(t), NA)
+    for(i in 1:nrow(X)){
+        out[i,] <- verhulst(X$K[i], X$Y0[i], X$a[i], t) }
+    out <- as.data.frame(out) ; names(out) <- paste("t",t,sep="")
+    return(out)	}
+@ 
+
+\paragraph{A sample of population dynamics}
+The output of the Verhulst model is plotted in Fig.~\ref{fig:verhulst}, for a few combinations of values of the parameters.
+
+\begin{figure}
+%  \centering
+<<MEplot, echo=TRUE, tidy=TRUE, include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=5, fig.height=3.5, out.width='0.9\\linewidth'>>=
+n <- 10 ; set.seed(1234)
+X <- data.frame(K=runif(n, min=100,max=1000), Y0=runif(n, min=1, max=40), 
+                a=runif(n, min=0.05,max=0.2))
+Y <- verhulst2(X)
+par(cex.axis=0.7, cex.lab=0.8)
+plot(T, Y[1,], type="l", xlab= "Time", ylab="Population size", ylim=c(0,1000))
+for(i in 2:n){ lines(T, Y[i,], type="l", col=i) }
+@
+
+  \protect\caption{Population size versus time according to the Verhulst model for 10 combinations of values of $K$, $Y_0$ and $a$.}
+  \label{fig:verhulst}
+\end{figure}
+
+%---------------------------------------------------------------------------
+\section{Sequential univariate sensitivity analyses}\label{sec:seq}
+%---------------------------------------------------------------------------
+\subsection{Calculation of sensitivity indices}\label{subsec:calcuni}
+Now we want to perform sensitivity analyses on the population sizes with respect to the three uncertain parameters: $K$, $Y_0$, and $a$. This can be done in different ways by using the main function of the package, which is called \texttt{multisensi} like the package itself.
+
+A first and obvious option is to perform separate sensitivity analyses at $t=5,10,...,100$. To do this, \texttt{multisensi} must be used with the argument \texttt{reduction=NULL}~:
+<<MEdynsi1, tidy=FALSE, echo=TRUE>>=
+library(multisensi)
+verhulst.seq <- multisensi(model=verhulst2, reduction=NULL, center=FALSE, 
+  design.args = list( K=c(100,400,1000), Y0=c(1,20,40), a=c(0.05,0.1,0.2)))
+@
+\noindent
+By keeping the default values of \texttt{multisensi} for the design and analysis arguments, a full factorial design is created according to the factors' levels provided in the \textsf{design.args} argument. The results are then analysed by the R function \textsf{aov}, with an anova formula including main effects and two-factor interactions.
+
+The result \textsf{verhulst.seq} is an object of class \textsf{dynsi}, which has specific \textsf{print}, \textsf{summary}, and \textsf{plot} methods. The \textsf{print} and \textsf{summary} functions give the sensitivity indices~:
+% in percents [NO]~:
+<<<MEdynsi2, tidy=TRUE, eval=TRUE>>=
+print(verhulst.seq, digits=2)
+@ 
+
+\subsection{Graphical representation}
+Rather than reading tables of sensitivity indices, the user may prefer to plot them. Fig.~\ref{fig:dynsi} shows the graphics obtained by the following code, where the two \texttt{plot} commands differ only by the \texttt{normalized} argument~:
+
+\begin{figure}
+ <<MEdynsi3, tidy=TRUE, echo=-(1),include=TRUE,  dev='pdf',close.dev=TRUE, fig.show='hold', fig.align='center',fig.width=6, fig.height=6, out.width='0.45\\linewidth'>>=
+par(cex.axis=1, cex.lab=0.9)
+# color palettes: rainbow, heat.colors, terrain.colors, topo.colors, cm.colors
+plot(verhulst.seq, normalized=TRUE, color=terrain.colors)
+title(xlab="Time in half-decades.")
+plot(verhulst.seq, normalized=FALSE, color=terrain.colors)
+title(xlab="Time in half-decades.")
+@
+
+  \protect\caption{Dynamics of the sensitivity indices of the Verhulst model from $t=5$ to $100$, with indices normalized either to 1 (left panel) or to the variance at each time $t$ (right panel). In the left panel, the upper subplot shows the extreme (tirets), inter-quartile (grey) and median (bold line) output values at all time steps. The lower subplot represents the sensitivity indices at all time steps for the main effects and the first-order interactions.}
+  \label{fig:dynsi}
+\end{figure}
+
+In the lower subplot of Fig.~\ref{fig:dynsi} (left panel), the sensitivity indices at time $t$ are given by the lengths of the different colors along the vertical bar at time $t$. Thus one can see clearly that the population size at time $t=25$ is sensitive to the main effects of $a$, $Y_0$, $K$ in quite similar proportions, with interactions accounting for roughly one-fourth of the variability. At time $t=100$, the population size is sensitive mainly to $K$, which is logical since the population sizes are close to their carrying capacity $K$. The upper subplot illustrates how output quantiles vary along the time steps. This is useful to avoid over-interpretation of the sensitivity indices at times when the variability between simulations is low. For example, the population size is very sensitive to $Y_0$ in the first time steps, but then the variability between simulations is still very low as shown in the upper subplot. This can also be seen by setting the argument \texttt{normalized=FALSE} as in Fig.~\ref{fig:dynsi} (right panel). In that case, the sensitivity indices at time $t$ are constrained to sum to the output variance at time $t$ rather than to reflect proportions summing to one at all times $t$.
+
+\subsection{Calculating simulations apart}\label{subsec:apart}
+If needed, the design or the model output can be calculated apart from the \texttt{multisensi} function. This allows to use a design generated outside \texttt{multisensi} or to apply \texttt{multisensi} to simulated data based on a code implemented outside R. Thus, the commands below are equivalent to those in Section~\ref{subsec:calcuni}~:
+<<MEalteruni, echo=TRUE, tidy=FALSE>>=
+X <- expand.grid(K=c(100,400,1000), Y0=c(1,20,40), a=c(0.05,0.1,0.2))
+Y <- verhulst2(X) ## this part can be performed outside R if necessary
+verhulst.seq <- multisensi(design=X, model=Y, reduction=NULL, center=FALSE)
+@
+
+%---------------------------------------------------------------------------
+\section{Multivariate sensitivity analysis based on PCA}
+%---------------------------------------------------------------------------
+The sequential sensitivity analyses of Section~\ref{sec:seq} give interesting information on the evolution of parameters' influence over time. However other methods based on multivariate techniques can give a more synthetic view of the parameters' impact on the population dynamics. Their common principle is to proceed to the analysis in two steps:
+\begin{enumerate}
+\item \textbf{dimension reduction:} a multivariate technique is applied to decompose the simulated dynamics on a reduced basis of $d$ canonical dynamics, which will be called the \emph{basic trajectories}. The multivariate techniques available in \multisensi\ are principal components analysis (PCA), B-splines, orthogonal B-splines or projection on a polynomial basis;
+\item \textbf{sensitivity analysis:} for each basic trajectory, sensitivity analysis is applied to the associated coefficients of the decomposition.
+\end{enumerate}
+
+Mathematically, the population dynamics are decomposed into
+\begin{equation}\label{eq:decomp}
+  Y_{i,t} = \sum_{j=1}^{d} \alpha_{ij} Z_{j,t} + \eta_{i,t},
+\end{equation}
+where $Y_{i,t}$ is the output of simulation $i$ at time $t$, $\big(Z_{j,t}\big)_{t=1,\cdots,T}$ is the $j$th basic trajectory (which depends on the multivariate technique), $\alpha_{ij}$ is the coefficient of simulation $i$ associated with the $j$th basic trajectory, $d$ is the reduction dimension and $\eta_{i,t}$ is the approximation error on simulation $i$ at time $t$ due to dimension reduction. Sensitivity analyses are applied to the $\alpha_{ij}$ coefficients, for each basic dimension $j=1,\cdots,d$. In addition, it is possible to calculate the generalised sensitivity indices (GSI), which are weighted means of the sensitivity indices over the $d$ dimensions, and the global criterion (GC), which quantifies the proportion of variability accounted for by the approximation resulting from both the dimension reduction and the restriction to low-order factorial effects in the sensitivity analysis (see Lamboni \etal\ \cite{lammon11} and \cite{xiali16}).
+
+In this Section, we illustrate this approach by focusing on principal components analysis (PCA). For any given reduced dimension $d$, the PCA decomposition maximises the variability between dynamics taken into account by the summation in equation~\eqref{eq:decomp}. Let $V$ denote the variance-covariance matrix of the $T$ vectors of simulated output variables $\big(Y_{i,t}\big)_{i=1,\cdots,N}$, where $N$ is the size of the design; then the PCA basic trajectories $\big(Z_{j,t}\big)_{t=1,\cdots,T}$ are the eigenvectors of $V$ in decreasing order of their associated eigenvalues.
+
+\subsection{Calculation}\label{subsec:calcmulti}
+Multivariate sensitivity analyses can be performed by using the same \textsf{multisensi} function as before. The choice of the multivariate technique is now specified by the argument \texttt{reduction=basis.ACP}~:
+<<MEgsi, tidy=FALSE>>=
+## Note that this old syntax of multisensi still works:
+## verhulst.gsi <- gsi(formula=2, Y, X) 
+verhulst.pca <- multisensi(design=X, model=Y, reduction=basis.ACP, scale=FALSE)
+@
+\noindent
+By keeping the default argument \texttt{dimension = 0.95}, the dimension $d$ is selected automatically as the smallest value such that 95\% of the total variability (or inertia) between dynamics is taken into account. Another option would be to specify \texttt{dimension = 3}, for example. Two other arguments are associated with dimension reduction, \textsf{center} and \textsf{scale}. When the output is a time series with the same variable calculated from time $t=1$ to $t=T$, as in our Verhulst model case study, it can be more pertinent to keep the raw ranges of variation of $Y$ over time. This is why we use the argument \texttt{scale=FALSE}. Note that we choose to use again the factorial design $X$ and the simulated output $Y$ calculated in Section~\ref{subsec:apart}. By default, the sensitivity analyses are performed by anova with a formula including main effects and two-factor interactions, as in Section~\ref{sec:seq}.
+ 
+The result \textsf{verhulst.pca} is an object of class \textsf{gsi}, which has \textsf{print}, \textsf{summary} and \textsf{plot} methods associated, in addition to the more specific functions \textsf{graph.pc} and \textsf{graph.bar}. The summary gives information on the inertia proportions explained by the first principal components, together with the tables of sensitivity indices.
+<<MEgsisummary, tidy=TRUE>>=
+summary(verhulst.pca, digits=2)
+@
+Here the inertia proportions show that the first two principal components explain 98\% of the total variability between the calculated population dynamics. So by default, the \textsf{multisensi} function performs the sensitivity analyses for these first two components only. The first component is influenced mainly by $K$ (SI=0.61), while the second component is influenced mainly by $a$, although less strongly. The influence of $Y_0$ is exerted mainly through interactions with $K$ and $a$. The last column in the tables of sensitivity indices gives the generalised sensitivity indices (GSI), which are the averages of the PC1 and PC2 indices weighted by the PC percentages of inertia.
+
+\subsection{Graphical representation}
+When a reduction technique is applied, several types of graphical representation can be useful to interpret the results. This is why the \textsf{plot} method allows for several options to be used depending on the value given to the \textsf{graph} argument.
+
+% graph=1
+The \textsf{graph=1} option gives multipanel graphics as shown in Fig.~\ref{fig:gsi1}. There is one column per dimension $j$ and two rows. The aim of the upper row is to show what the components in dimension $j$ look like with respect to the output variables, so they present quantile curves $\big(\alpha_{Qj} Z_{j,t}\big)_{t=1,\cdots,T}$, where $\alpha_{Qj}$ denotes the quantile $Q$ of the $\alpha_{ij}$ values for $i=1,\cdots,N$ (see details in the legend of Fig.~\ref{fig:gsi1}). The lower row contains the bar plot of sensitivity indices for each dimension $j$ of interest.
+
+\begin{figure}
+%  \centering
+<<MEgsiplot1, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE,  fig.width=6, fig.height=6, out.width='0.9\\linewidth', fig.align='center'>>=
+par(cex.axis=0.8, cex.lab=0.9)
+plot(verhulst.pca, graph=1)
+@
+%graph.pc(verhulst.pca)
+  \protect\caption{Plots for the PCA multivariate sensitivity analysis of the Verhulst model. Upper subplots: functional boxplots of the principal components, with time on the x-axis and population size contribution on the y-axis (red curves: extreme values, blue: 1/10 and 9/10 percentiles, grey area: inter-quartile, black: median). Lower subplots: sensitivity indices (light grey: first order indices, dark grey: total indices).}
+  \label{fig:gsi1}
+\end{figure}
+
+For the Verhulst case study, the left upper plot in Fig.~\ref{fig:gsi1} shows that the first principal component, which explains more than 90\% of the inertia, captures essentially an average effect over time. The left lower plot confirms that this effect is mainly influenced by the maximum population size $K$, with smaller contributions of $a$, $Y_0$ and interactions. 
+
+The right upper plot in Fig.~\ref{fig:gsi1} shows that the second principal component, which explains about 8\% of the inertia, captures the contrast in the dynamics between the early and late periods. The right lower plot shows that this effect is influenced first by $a$, but also by $K$ and $Y_0$ and by strong two-factor interactions. 
+\vspace{2mm}
+
+% graph=2
+The \textsf{graph=2} option gives the bar plot of generalised sensitivity indices (see Fig.~\ref{fig:gsi2}). In the case study, these indices represent the contributions of the factors to the whole variability between the dynamics of population size.
+
+\begin{figure}
+%  \centering
+<<MEgsiplot2, tidy=TRUE, include=TRUE, dev='pdf', close.dev=TRUE,  fig.width=6, fig.height=6, out.width='0.6\\linewidth', fig.align='center'>>=
+plot(verhulst.pca, graph=2)
+@
+  \protect\caption{Bar plot of the PCA generalised sensitivity indices of the Verhulst model.}
+  \label{fig:gsi2}
+\end{figure}
+
+% graph=3
+For each output variable, the multivariate sensitivity analysis accounts only for part of the variability between simulations. The first reason is due to dimension reduction. The second reason is because the sensitivity analysis is usually restricted to the factorial effects of first order or possibly first and second order. In \multisensi, these proportions of variability that are accounted for can be quantified by $R^2$ coefficients of determination, provided the sensitivity analysis is based on anova. The \textsf{graph=3} option allows to plot these $R^2$ coefficients of determination, as shown in Fig.~\ref{fig:gsi3} for the case study. The $R^2$ values are low for the first output variables, because they have low variance and so have little weight in the determination of the basic trajectories. The $R^2$ values would have been more uniform if we had chosen to normalise the output variables by setting \textsf{scale=TRUE}.
+\vspace{2mm}
+
+\begin{figure}
+%  \centering
+<<MEgsiplot3, tidy=TRUE, include=TRUE, dev='pdf', close.dev=TRUE,  fig.width=6, fig.height=6, out.width='0.6\\linewidth', fig.align='center'>>=
+plot(verhulst.pca, graph=3)
+@
+%graph.pc(verhulst.pca)
+  \protect\caption{Coefficients of determination of the output variables for the PCA multivariate sensitivity analysis of the Verhulst model on raw output data.}
+  \label{fig:gsi3}
+\end{figure}
+
+%---------------------------------------------------------------------------
+\section{Alternative reduction techniques}
+%---------------------------------------------------------------------------
+In practice, it can be useful to apply sensitivity analysis with multivariate techniques other than PCA. The package \multisensi\ provides projection methods either on a reduced polynomial basis or on data-based spline bases.
+\subsection{Polynomial reduction of the multivariate output}
+In the case of a polynomial decomposition, the $(Y_{i,t})_{t=1,\cdots,T}$ dynamics are approximated by polynomials of a given degree $d-1$. Thus the $(Z_{j,t})_{t=1,\cdots,T}$ basic trajectories of equation~\eqref{eq:decomp} are the monomials of $t$ of degree up to $d-1$. 
+
+In \multisensi, this decomposition is obtained by setting the argument \textsf{reduction = basis.poly}. It is necessary to give additional information through the \textsf{basis.args} argument. We do it here for the Verhulst model by specifying that the polynomial must be of degree six or lower and by giving the vector of output time coordinates $t=(5,\cdots,100)^T$.
+
+<<MEgsipoly2, echo=TRUE, tidy=FALSE>>=
+verhulst.poly <- multisensi(design = X, model = Y, reduction = basis.poly,
+      dimension = 0.99, center = FALSE, scale = FALSE, cumul = FALSE,
+      basis.args = list(degree=6, x.coord=T), analysis = analysis.anoasg, 
+      analysis.args = list(formula=2, keep.outputs=FALSE))
+summary(verhulst.poly, digits=2)
+@
+The results show that polynomials of degree 3 are sufficient to integrate more than 99$\%$ of the output variability. Graphics are given in Fig.~\ref{fig:poly}. 
+
+\begin{figure}
+<<MEgsipolyplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE,  fig.align='center',fig.width=9, fig.height=6, out.width='0.9\\linewidth'>>=
+par(cex.axis=0.9, cex.lab=1.0)
+plot(verhulst.poly, nb.comp=3,graph=1)
+@
+
+  \caption{Plots for the multivariate sensitivity analysis based on polynomial regression. Upper subplots: functional boxplots of the constant, linear and quadratic components, with time on the x-axis and population size contribution on the y-axis (red curves: extreme values, blue: 1/10 and 9/10 percentiles, grey area: inter-quartile, black: median). Lower subplots: sensitivity indices (light grey: first order indices, dark grey: total indices).}
+  \label{fig:poly}
+\end{figure}
+
+\subsection{Spline modelling of the population dynamics}
+Splines represent other popular techniques of multivariate analysis (see \cite{james13,wood06,redd11}). We give an example just below with B-splines, see also Fig.~\ref{fig:bsplines}. More information is given in the help of \textsf{basis.bsplines}. 
+
+<<MEgsi2.bsplines, tidy=FALSE>>=
+## bsplines
+verhulst.bspl <- multisensi(design=X, model=Y, reduction=basis.bsplines, 
+                        dimension=NULL, center=FALSE, scale=FALSE, 
+                        basis.args=list(knots=10, mdegree=3), cumul=FALSE, 
+                        analysis=analysis.anoasg, 
+                        analysis.args=list(formula=2, keep.outputs=FALSE))
+@
+
+\begin{figure}
+<<MEgsibsplinesplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=15, fig.height=6, out.width='0.9\\linewidth'>>=
+#par(cex.axis=0.9, cex.lab=1.0)
+plot(verhulst.bspl, nb.comp=5,graph=1)
+@
+
+  \protect\caption{Plots for the multivariate sensitivity analysis based on bspline regression. Upper subplots: functional boxplots of the b-splines, with time on the x-axis and population size contribution on the y-axis (red curves: extreme values, blue: 1/10 and 9/10 percentiles, grey area: inter-quartile, black: median). Lower subplots: sensitivity indices (light grey: first order indices, dark grey: total indices).}
+  \label{fig:bsplines}
+\end{figure}
+
+%---------------------------------------------------------------------------
+\section{Alternative methods of sensitivity analysis}
+%---------------------------------------------------------------------------
+Sensitivity analyses based on factorial design plus anova are very useful and convenient. However, they oblige to restrict the levels of each input factor to a few discretised values from their uncertainty ranges. Other methods of global sensitivity analysis take better account of continuous ranges of input values. Many of them can be used with \multisensi. 
+
+\subsection{With Sobol2007 implemented in the package \sensitivity}
+The function \textsf{multisensi} is compatible with the methods of sensitivity analysis implemented in the \textsf{sensitivity} package. To illustrate this, we first call the \sensitivity ~package:
+<<MEsensitivity, tidy=TRUE, echo=TRUE, include=TRUE>>=
+library(sensitivity)
+@
+
+Then we use the method \textsf{sobol2007} of the \textsf{sensitivity} package~:
+<<MEdynsiSobol, tidy=TRUE, echo=TRUE, include=TRUE>>=
+m <- 10000
+Xb <- data.frame(K=runif(m, min=100,max=1000), Y0=runif(m, min=1, max=40), 
+                   a=runif(m, min=0.05,max=0.2))
+verhulst.seq.sobol<-
+    multisensi(design=sobol2007, model=verhulst2,
+               reduction=NULL, analysis=analysis.sensitivity, center=TRUE, 
+               design.args=list(X1=Xb[1:(m/2),], X2=Xb[(1+m/2):m,], nboot=100), 
+               analysis.args=list(keep.outputs=FALSE))
+print(verhulst.seq.sobol,digits=2)
+@
+Results are given above and the sequence of sensitivity indices is displayed in Fig.~\ref{fig:dynsi-Sobol}. The results are very similar to those of Section~\ref{sec:seq}, but here they have obtained by varying the input factors across their whole uncertainty intervals.
+
+Of course, the Sobol method of sensitivity analysis can also be combined with the multivariate techniques (PCA, polynomials, splines), by changing the \textsf{reduction} argument.
+
+\begin{figure}
+<<MEdynsiSobolplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=6, fig.height=6, out.width='0.7\\linewidth'>>=
+  par(cex.axis=0.8, cex.lab=0.9)
+  plot(verhulst.seq.sobol, normalized=TRUE, color=terrain.colors)
+  title(xlab="Time in half-decades")
+@
+  \protect\caption{Evolution of the Sobol sensitivity indices of the Verhulst model from $t=5$ to $t=100$. The upper subplot shows the extreme (tirets), inter-quartile (grey) and median (bold line) output values at all time steps. The lower subplot represents the sensitivity indices at all time steps for the main effects and the first-order interactions.}
+  \label{fig:dynsi-Sobol}
+\end{figure}
+
+\subsection{With fast99 implemented in the package \sensitivity}
+
+Another possibility is to use the method \textsf{fast99}~:
+<<MEdynsiFast, tidy=FALSE, echo=TRUE, include=TRUE>>=
+verhulst.seq.fast <- multisensi(design = fast99, model = verhulst2,
+      center = FALSE, reduction = NULL, analysis = analysis.sensitivity, 
+      design.args=list( factors=c("K","Y0","a"), n=1000, q = "qunif", 
+        q.arg = list(list(min=100, max=1000), list(min=1, max=40), 
+          list(min = 0.05, max = 0.2))),
+      analysis.args=list(keep.outputs=FALSE))
+  print(verhulst.seq.fast,digits=2)
+@
+
+Results are shown above and the sequence of sensitivity indices is displayed in Fig.~\ref{fig:dynsi-fast}. 
+
+\begin{figure}
+<<MEdynsiFastplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=6, fig.height=6, out.width='0.7\\linewidth'>>=
+  par(cex.axis=0.8, cex.lab=0.9)
+  plot(verhulst.seq.fast, normalized=TRUE, color=terrain.colors)
+  title(xlab="Time in half-decades")
+@
+  \protect\caption{Evolution of the Fast sensitivity indices of the Verhulst model from $t=5$ to $t=100$. The upper subplot shows the extreme (tirets), inter-quartile (grey) and median (bold line) output values at all time steps. The lower subplot represents the sensitivity indices at all time steps for the main effects and the first-order interactions.}
+  \label{fig:dynsi-fast}
+\end{figure}
+
+
+%---------------------------------------------------------------------------
+\section*{Acknowledgements}
+%---------------------------------------------------------------------------
+This document was typed using the \texttt{knitr} package (\cite{xie15,xie16}).
+
+%This document was typed using the \texttt{Sweave} package (Leisch, 2002\cite{sweave02}).
+% ---------------------------------------------------------------------------
+\bibliographystyle{smfplain}      %\bibliographystyle{smfalpha ou acm}
+\bibliography{multisensi}
+%---------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------
+\end{document}
+%-------------------------------------------------------------------------

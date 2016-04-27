@@ -1,11 +1,11 @@
-\name{plan}
-\alias{plan}
+\name{biomasseX}
+\alias{biomasseX}
 \docType{data}
 \title{A factorial input design for the main example}
 \description{
  Factorial design (resolution V) data for the 7 WWDM model input factors
 }
-\usage{data(plan)}
+\usage{data(biomasseX)}
 \format{
   A data frame with 2187 observations on the following 7 variables.
   \describe{
@@ -19,8 +19,8 @@
   }
 }
 \examples{
-data(plan)
-## maybe str(plan) ; plot(plan) ...
+data(biomasseX)
+## maybe str(biomasseX) ; plot(biomasseX) ...
 }
 \keyword{datasets}
-\seealso{\code{\link{biomasse}}}
+\seealso{\code{\link{biomasse}}, \code{\link{biomasseY}}}

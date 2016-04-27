@@ -1,26 +1,36 @@
+CHANGES IN 2.0 (2016-04-26)
+-----------------------------
+
+New Features (a lot)
+- New plots and options for plot.dynsi() (arguments: normalized, total.plot, xtick)
+- New plots and options for plot.gsi() (arguments: cor.plot, xtick)
+- New function : multisensi()
+- New reduction methods
+- A Quick Guide
+
 CHANGES IN 1.0-8 (2015-02-13)
 -----------------------------
 
 Bug Fixes
-- Changes in summary.gsi to display the total sensitivity indices.
+- Changes in summary.gsi() to display the total sensitivity indices.
 
 New Features
-- New option for plot.gsi (argument type)
+- New option for plot.gsi() (argument type)
 
 CHANGES IN 1.0-7 (2013-07-15)
 -----------------------------
 
 Bug Fixes
-- Changes in plot.gsi to open new device in a portable way.
+- Changes in plot.gsi() to open new device in a portable way.
 
 New Features
-- Modify inputs and outputs of ACP and yapprox - internal functions.
+- Modify inputs and outputs of ACP() and yapprox() - internal functions.
 
 CHANGES IN 1.0-6 (2013-05-03)
 -----------------------------
 
 New Features
-- New options for plot.dynsi (arguments shade and color)
+- New options for plot.dynsi() (arguments shade and color)
 - Faster examples by using a precalculated set of output variables of
   the biomasse model (dataset biomasseY)
 

@@ -9,5 +9,5 @@
   \item{object}{a GSI object}
   \item{...}{summary parameters}
 }
-\seealso{\code{\link{gsi}}}
-\author{M. LAMBONI}
+\seealso{\code{\link{gsi}}, \code{\link{multisensi}}}
+\author{C. Bidot, M. Lamboni}

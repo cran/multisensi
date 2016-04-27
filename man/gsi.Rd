@@ -56,10 +56,15 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
   \item{Rsquare}{vector of dynamic coefficient of determination}
   \item{Att}{0-1 matrix of association between input factors and
     factorial terms in the anovas}
+  \item{scale}{logical value, see the arguments}
   \item{normalized}{logical value, see the arguments}
   \item{cumul}{logical value, see the arguments}
+  \item{call.info}{a list containing informations on the process (reduction, analysis, fct, call)}
+  \item{inputdesign}{either the input data.frame or the sensitivity object used}
+  \item{outputs}{a list of results on each output variable}
   ...
 }
+\note{This function will not be maintained, we recommend use of the \code{\link{multisensi}} function instead (same outputs).}
 \references{
   M. Lamboni, D. Makowski and H. Monod, 2009. Multivariate
   global sensitivity analysis for dynamic
@@ -70,18 +75,17 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
   to Reliability Engineering  and System Safety.
 }
 \author{ M. Lamboni}
-\seealso{dynsi}
+\seealso{\code{\link{dynsi}}, \code{\link{multisensi}}}
 \examples{
-##---- Should be DIRECTLY executable !! ----
 # Test case : the Winter Wheat Dynamic Models (WWDM)
 #  input factors design
- data(plan)
+ data(biomasseX)
 # input climate variable
  data(Climat)
 # output variables (precalculated to speed up the example)
  data(biomasseY)
 #
- GSI <- gsi(2, biomasseY, plan, inertia=3, normalized=TRUE, cumul=FALSE,
+ GSI <- gsi(2, biomasseY, biomasseX, inertia=3, normalized=TRUE, cumul=FALSE,
             climdata=Climat)
  summary(GSI)
  print(GSI)

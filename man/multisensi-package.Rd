@@ -1,16 +1,15 @@
 \name{multisensi-package}
 \alias{multisensi-package}
-\alias{multisensi}
+%\alias{multisensi}
 \docType{package}
 \title{Multivariate sensitivity Analysis}
 \description{Sensitivity Analysis (SA) for models with multivariate output}
 \details{
+  This package generalises sensitivity analysis to simulation models with multivariate output. It makes it easy to run a series of independent sensitivity analyses on a set of output variables and to plot the results. Alternatively, it allows to apply sensitivity analyses to the variables resulting from the application of a multivariate method (such as PCA or splines or polynomial regression) to the output data (Lamboni et al., 2009).
 
-This package contains three methods for performing sensitivity analysis
-on simulation models with multivariate output:
+The function \code{\link{multisensi}} integrates all the different possible methods implemented in the package. Besides, the user may consider the functions which have existed since the first version of the package:
 
-i) \code{\link{gsi}} function for the Generalised Sensitivity Analysis  (Lamboni et
-al., 2009) based on inertia decomposition. This method synthesizes the
+i) \code{\link{gsi}} function for the Generalised Sensitivity Analysis  (Lamboni et al., 2011, Xiao and Li, 2016) based on inertia decomposition. This method synthesizes the
 information that is spread between the time outputs or between the
 principal components and produces a unique sensitivity index for each
 factor.
@@ -21,12 +20,11 @@ computing sensitivity indices on principal components (Campbell et al., 2006)
 iii) \code{\link{dynsi}} function for the dynamic sensitivity analysis obtained by
 computing sensitivity indices on each output variable.
 
-For all three methods, sensitivity indices are calculated presently by
-using a factorial design and a classical ANOVA decomposition.
+In the first version of \pkg{multisensi}, sensitivity indices were based on using a factorial design and a classical ANOVA decomposition. It is now possible to use other methods for the design and for the sensitivity analysis.
 
 Simulation model management
 
-The multisensi package works on simulation models coded either in \R or
+The \pkg{multisensi} package works on simulation models coded either in \R or
 using an external language (typically as an executable file). Models
 coded in \R must be either functions or objects that have a predict
 method, such as lm objects. Models defined as functions will be called
@@ -46,17 +44,18 @@ fit the required specifications.
 }
 
 
-\references{Lamboni, M., Makowski, D., Monod, H., 2009. Multivariate
-  global sensitivity analysis for dynamic crop models. Field Crops
-  Research, volume 113.  pp. 312-320
+\references{
+Lamboni, M., Makowski, D., Monod, H., 2009. Multivariate global sensitivity analysis for dynamic crop models. Field Crops Research, volume 113, pp. 312-320.
 
-Lamboni, M., Makowski, D., Monod, H., 2009. Multivariate sensitivity
-    analysis to measure global contribution of input factors in dynamic
-    models (submitted in october 2009 to Reliability
-    Engineering & System Safety)
+Lamboni, M., Makowski, D., Monod, H., 2011. Multivariate sensitivity analysis to measure global contribution of input factors in dynamic models. Reliability Engineering & System Safety, volume 96, pp. 450-459.
+
+Xiao, H., Li, L., 2016. Discussion of paper by M. Lamboni, H. Monod, D. Makowski Multivariate sensitivity analysis to measure global contribution of input factors in dynamic models, Reliab. Eng. Syst. Saf. 96 (2011) 450-459. Reliability Engineering & System Safety, volume 147, pp. 194-195.
 
 Saltelli, A., Chan, K., Scott, E.M. eds, 2000. \emph{Sensitivity
-Analysis} Wiley, New York.  }
+Analysis} Wiley, New York.  
+}
 
-\author{Matieyendou Lamboni <clamboni@yahoo.fr>, Herv\'e Monod <herve.monod@jouy.inra.fr>, Caroline Bidot <caroline.bidot@jouy.inra.fr>}
+\author{C. Bidot, % \email{caroline.bidot@jouy.inra.fr}
+M. Lamboni, %\email{clamboni@yahoo.fr}
+H. Monod} %\email{herve.monod@jouy.inra.fr}
 

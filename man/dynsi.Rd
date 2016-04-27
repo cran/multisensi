@@ -11,39 +11,44 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
 }
 \arguments{
   \item{formula}{ANOVA formula like \code{"A+B+c+A:B"} OR an integer equal to the
-    maximum interaction order in the sensitivity model}
+    maximum interaction order in the sensitivity model.}
   \item{model}{output data.frame OR the name of the R-function which
     calculates the model output. The only argument of this function
-    must be a vector containing the input factors values}
+    must be a vector containing the input factors values.}
   \item{factors}{input data.frame (the design) if model is a data.frame
     OR a list of factors levels such as
-    \code{factor.example <- list(A=c(0,1),B=c(0,1,4))}}
+    \code{factor.example <- list(A=c(0,1),B=c(0,1,4))}.}
   \item{cumul}{logical value. If TRUE the sensitivity analysis will be
-    done on the cumalative outputs}
+    done on the cumalative outputs.}
   \item{simulonly}{logical value. If TRUE the program stops after
-    calculating the design and the model outputs}
+    calculating the design and the model outputs.}
   \item{nb.outp}{The first nb.outp number of model outputs to be
-    considered. If NULL all the outputs are considered}
+    considered. If NULL all the outputs are considered.}
   \item{Name.File}{optional name of a R script file containing the
-    R-function that calculates the simulation model. e.g  \code{"exc.ssc"}}
-  \item{...}{possible fixed parameters of the model function}
+    R-function that calculates the simulation model. e.g  \code{"exc.ssc"}.}
+  \item{...}{possible fixed parameters of the model function.}
 }
 \details{
- If factors is a list of factors, the dynsi function generates a complete
+ If \code{factors} is a list of factors, the dynsi function generates a complete
  factorial design. If it is a data.frame, dynsi expects that each column is
  associated with an input factor.
 }
-\value{dynsi returns a list of class "dynsi", containing all the input arguments detailed before, plus
-  the following components:
+\value{dynsi returns a list of class "dynsi" containing the following components:
   \item{X}{a data.frame containing the experimental design (input samples)}
-  \item{Y}{a data.frame containing the output matrix (response)}
+  \item{Y}{a data.frame containing the output (response)}
   \item{SI}{a data.frame containing  the Sensitivity Indices (SI) on each
     output variable of the model}
-  \item{mSI}{a data.frame of principal SI on each output variable}
+  \item{mSI}{a data.frame of first order SI on each output variable}
   \item{tSI}{a data.frame containing the total SI on each output variable}
   \item{iSI}{a data.frame of interaction SI on each output variable}
+  \item{Att}{0-1 matrix of association between input factors and
+    factorial terms in the anovas}
+  \item{call.info}{a list containing informations on the process (reduction=NULL, analysis, fct, call)}
+  \item{inputdesign}{either the input data.frame or the sensitivity object used}
+  \item{outputs}{a list of results on each output variable}
   ...
 }
+\note{This function will not be maintained, we recommend use of the \code{\link{multisensi}} function instead (same outputs).}
 \references{
   M. Lamboni, D. Makowski and H. Monod, 2009. Multivariate
   global sensitivity analysis for dynamic crop models.
@@ -52,19 +57,19 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
   A. Saltelli, K. Chan and E. M. Scott eds, 2000. \emph{Sensitivity
   Analysis}. Wiley, New York.
 }
-\author{Matieyendou LAMBONI}
-\seealso{gsi}
+\author{M. Lamboni}
+
+\seealso{\code{\link{gsi}}, \code{\link{multisensi}}}
 \examples{
-##---- Should be DIRECTLY executable !! ----
 # Test case : the Winter Wheat Dynamic Models (WWDM)
 # input factors design,
- data(plan)
+ data(biomasseX)
 # input Climate variables
  data(Climat)
 # output variables (precalculated to speed up the example)
  data(biomasseY)
 #
- DYNSI <- dynsi(2, biomasseY, plan)
+ DYNSI <- dynsi(2, biomasseY, biomasseX)
  summary(DYNSI)
  print(DYNSI)
  plot(DYNSI, color=heat.colors)

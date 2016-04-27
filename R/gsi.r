@@ -1,4 +1,39 @@
+# Multisensi R package ; file gsi.r (last modified: 2015-12-07) 
+# Copyright INRA 2011-2015 
+# Authors: C. Bidot, M. Lamboni, H. Monod
+# MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
+#
+# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+#
+# This software is governed by the CeCILL license under French law and
+# abiding by the rules of distribution of free software.  You can  use, 
+# modify and/ or redistribute the software under the terms of the CeCILL
+# license as circulated by CEA, CNRS and INRIA at the following URL
+# "http://www.cecill.info". 
+#
+# As a counterpart to the access to the source code and  rights to copy,
+# modify and redistribute granted by the license, users are provided only
+# with a limited warranty  and the software's author,  the holder of the
+# economic rights,  and the successive licensors  have only  limited
+# liability. 
+#
+# In this respect, the user's attention is drawn to the risks associated
+# with loading,  using,  modifying and/or developing or reproducing the
+# software by the user in light of its specific status of free software,
+# that may mean  that it is complicated to manipulate,  and  that  also
+# therefore means  that it is reserved for developers  and  experienced
+# professionals having in-depth computer knowledge. Users are therefore
+# encouraged to load and test the software's suitability as regards their
+# requirements in conditions enabling the security of their systems and/or 
+# data to be ensured and,  more generally, to use and operate it in the 
+# same conditions as regards security. 
+#
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL license and that you accept its terms.
+#
+#===========================================================================
 gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FALSE, simulonly=FALSE, Name.File=NULL, ...)
+#===========================================================================
 {
   ##INPUTS
   ## formula      : ANOVA formula like "A+B+c+A:B"   OR  The max interaction
@@ -41,89 +76,20 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
   ## normalized   : logical value used for normalized
   ## cumul        : logical value used for cumul
  
-  
-  ##----------------------------------------------------------------
-  ##  STEP 1 : Build Design if input data is not given
-  ##----------------------------------------------------------------
-  ## CASE 1 : 'factors' is a list of factor names and levels
-  ## CASE 2 : 'factors' is the input dataframe (not tested)
-  ##   => if case 1, then a factorial design is constructed
-  ##      else, go to STEP 2
+
   if(is.null(dim(factors))){
-    cat("[*] Design \n")
-    factors <- planfact.as(factors)
+    # factors is a list then we need to build a design
+    multisensi.design=planfact.as
+    d.args=factors
+  }else{
+    multisensi.design=factors
+    d.args=list()
   }
 
-  ##----------------------------------------------------------------
-  ##  STEP 2 : Get the simulation outputs
-  ##----------------------------------------------------------------
-  ## CASE 1 : 'model' is a function
-  ## CASE 2 : 'model' is the outputs dataframe (not tested)
-  ##   => if case 1, perform the simulations
-  ##      else, go to next step
-  if(is.data.frame(model)==FALSE){
-    ## response simulation
-    cat("[*] Response simulation \n")
-    model <- simulmodel(model=model, plan=factors, nomFic=Name.File, ...)
-  }
-   
-  ## Optional transformation of the output
-  if(cumul==TRUE) { model <- t(apply(model,1,cumsum) )}
-  
-  ##--------------------------------------------------------------
-  ##  STEP 3 : Principal Component Analysis (PCA)
-  ##-------------------------------------------------------------
-  ## CASE 1 : 'simulonly' is TRUE
-  ## CASE 2 : 'simulonly' is FALSE
-  ##   => if case 2, get out
-  ##      else, perform the PCA
-  if(simulonly){
-    return(list(X=factors,Y=model))
-  }
-  
-  cat("[*] Principal Component Analysis \n")
-  ACP1 <- ACP(model,inertia,normalized)
-    
-  ##-------------------------------------------------------------
-  ##  STEP 4 : ANOVAs Analysis on nbcomp Principal Component (PC)
-  ##-------------------------------------------------------------
-  cat("[*] ANOVAs Analysis \n")
-  ANO <- anovadec(ACP1$H,factors,formula,ACP1$nbcomp)
-  
-  ##-------------------------------------------------------------
-  ##  STEP 5 : Goodness of fit computing
-  ##-------------------------------------------------------------
-  cat("[*] Goodness of fit computing \n")
-  Yapp <- yapprox(ACP1, ACP1$nbcomp, ANO)
-  qual.app <- quality(model, Yapp, normalise=normalized)
-  
-  ##--------------------------------------------------------------------
-  ##  STEP 6 ; Sensitivity Indices on nbcomp PC and GSI
-  ##-------------------------------------------------------------------
-  cat("[*] Sensitivity Indices \n")
-  ASG <- asg(ANO, ACP1, ACP1$trace, ACP1$nbcomp)
-  
-  result <- list(X=factors,
-                 Y=as.data.frame(model),
-                 H=as.data.frame(ACP1$H[,1:ACP1$nbcomp,drop=FALSE]),
-                 L=as.data.frame(ACP1$L[,1:ACP1$nbcomp,drop=FALSE]),
-                 lambda=((ACP1$sdev)^2)[1:ACP1$nbcomp],
-                 inertia= ASG$inertia,
-                 cor=ASG$cor,
-                 SI= ASG$SI,
-                 mSI=ASG$mSI,
-                 tSI= ASG$tSI,
-                 iSI= ASG$iSI,
-                 pred=as.data.frame(Yapp),
-                 residuals=as.data.frame(model)-as.data.frame(Yapp),
-                 Rsquare= qual.app$coef.det,
-                 Att=ASG$indic.fact,
-                 normalized=normalized,
-                 cumul=cumul
-                 )
-  
-  class(result) <- "gsi"
-  
-  result
+  result <- multisensi(design=multisensi.design, model=model, reduction=basis.ACP, dimension=inertia, center=TRUE, scale=normalized, analysis=analysis.anoasg, cumul=cumul, simulonly=simulonly, Name.File=Name.File, design.args=d.args, basis.args=list(), analysis.args=list(formula=formula,keep.ouputs=FALSE), ...)
+  cat("Warning : gsi function will not be maintained in future version of multisensi package.\n")
+  cat("You may use multisensi function instead, like this :\n")
+  print(result$call.info$call)
+
+  return(result)
 }
-
