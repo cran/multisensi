@@ -23,4 +23,4 @@ graph.pc(x, nb.plot = 15, nb.comp = NULL, xmax = NULL,
   \item{type}{what type of plot should be drawn for correlation graph ("l" for lines).}
   \item{...}{graphical parameters.}
 }
-\author{C. Bidot, M. Lamboni}
+%\author{C. Bidot, M. Lamboni}

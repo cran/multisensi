@@ -23,7 +23,7 @@ multisensi(design = expand.grid, model, reduction = basis.ACP,
 }
   \item{dimension}{EITHER the number of variables to analyse, specified by an integer or by the minimal proportion of inertia (a scalar < 1) to keep in the output decomposition OR a vector specifying a subset of columns in the output data.frame OR NULL if all variables must be analysed. 
   }
-  \item{center}{logical value. If TRUE (default value) the output variables are centered.
+  \item{center}{logical value. If TRUE (default value) the output variables are centred.
   }
   \item{scale}{logical value. If TRUE (default value) the output variables are normalized before applying the reduction function.
   }
@@ -73,7 +73,7 @@ multisensi(design = expand.grid, model, reduction = basis.ACP,
 %   inertia      : vector of inertia per PCs and Global criterion
 %   cor          : data.frame of correlation between PCs and outputs
 %   SI           : data.frame of first, two ... order Sensitivity Indices (SI) on PCs and
-%                          first, two...  order Generalized SI (GSI)
+%                          first, two...  order Generalised SI (GSI)
 %   mSI          : data.frame of principal SI on PCs and principal GSI
 %   tSI          : data.frame of total SI on PCs and total GSI
 %   iSI          : data.frame of interaction SI on PCs and interaction GSI
@@ -85,7 +85,7 @@ multisensi(design = expand.grid, model, reduction = basis.ACP,
 %   cumul        : logical value used for cumul
 
 }
-\author{C. Bidot, H Monod}
+%\author{C. Bidot, H Monod}
 
 
 \seealso{\code{\link{dynsi}}, \code{\link{gsi}}}

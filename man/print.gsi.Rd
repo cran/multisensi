@@ -12,4 +12,4 @@
   \item{...}{print parameters}
 }
 \seealso{\code{\link{gsi}}, \code{\link{multisensi}}}
-\author{ M. Lamboni}
+%\author{ M. Lamboni}

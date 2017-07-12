@@ -10,4 +10,4 @@
   \item{...}{summary parameters}
 }
 \seealso{\code{\link{gsi}}, \code{\link{multisensi}}}
-\author{C. Bidot, M. Lamboni}
+%\author{C. Bidot, M. Lamboni}

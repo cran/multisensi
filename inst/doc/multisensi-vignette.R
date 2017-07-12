@@ -39,9 +39,9 @@ print(verhulst.seq, digits=2)
 ## ----MEdynsi3, tidy=TRUE, echo=-(1),include=TRUE,  dev='pdf',close.dev=TRUE, fig.show='hold', fig.align='center',fig.width=6, fig.height=6, out.width='0.45\\linewidth'----
 par(cex.axis=1, cex.lab=0.9)
 # color palettes: rainbow, heat.colors, terrain.colors, topo.colors, cm.colors
-plot(verhulst.seq, normalized=TRUE, color=terrain.colors)
+plot(verhulst.seq, normalized=TRUE, color=terrain.colors, gsi.plot=FALSE)
 title(xlab="Time in half-decades.")
-plot(verhulst.seq, normalized=FALSE, color=terrain.colors)
+plot(verhulst.seq, normalized=FALSE, color=terrain.colors, gsi.plot=FALSE)
 title(xlab="Time in half-decades.")
 
 ## ----MEalteruni, echo=TRUE, tidy=FALSE----------------------------

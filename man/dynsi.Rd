@@ -37,10 +37,10 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
   \item{X}{a data.frame containing the experimental design (input samples)}
   \item{Y}{a data.frame containing the output (response)}
   \item{SI}{a data.frame containing  the Sensitivity Indices (SI) on each
-    output variable of the model}
-  \item{mSI}{a data.frame of first order SI on each output variable}
-  \item{tSI}{a data.frame containing the total SI on each output variable}
-  \item{iSI}{a data.frame of interaction SI on each output variable}
+    output variable of the model and the Generalised SI (GSI)}
+  \item{mSI}{a data.frame of first order SI on each output variable and first order GSI}
+  \item{tSI}{a data.frame containing the total SI on each output variable and the total GSI}
+  \item{iSI}{a data.frame of interaction SI on each output variable and interaction GSI}
   \item{Att}{0-1 matrix of association between input factors and
     factorial terms in the anovas}
   \item{call.info}{a list containing informations on the process (reduction=NULL, analysis, fct, call)}
@@ -48,7 +48,7 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
   \item{outputs}{a list of results on each output variable}
   ...
 }
-\note{This function will not be maintained, we recommend use of the \code{\link{multisensi}} function instead (same outputs).}
+\note{This function can now be replaced by a call to the \code{\link{multisensi}} function. It is kept for compatibility with Version 1 of the \pkg{multisensi} package.}
 \references{
   M. Lamboni, D. Makowski and H. Monod, 2009. Multivariate
   global sensitivity analysis for dynamic crop models.
@@ -57,7 +57,7 @@ dynsi(formula, model, factors, cumul = FALSE, simulonly=FALSE,
   A. Saltelli, K. Chan and E. M. Scott eds, 2000. \emph{Sensitivity
   Analysis}. Wiley, New York.
 }
-\author{M. Lamboni}
+%\author{M. Lamboni}
 
 \seealso{\code{\link{gsi}}, \code{\link{multisensi}}}
 \examples{

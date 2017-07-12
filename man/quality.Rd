@@ -19,5 +19,5 @@ quality(echsimul, echsimul.app)
   }
 }
 \note{This is essentially an internal function for the \pkg{multisensi} package}
-\author{C. Bidot, M. Lamboni}
+%\author{C. Bidot, M. Lamboni}
 \keyword{internal function}

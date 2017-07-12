@@ -1,9 +1,9 @@
 # Multisensi R package ; file yapprox.r (last modified: 2015-10-15) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -61,7 +61,5 @@ yapprox <- function(multivar.obj, nbcomp=2, aov.obj)
   echsimul.app <- multivar.obj$centering + echsimul.app
   colnames(echsimul.app)=rownames(multivar.obj$L)
 
-
   return(echsimul.app)
 }
-

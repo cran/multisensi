@@ -1,9 +1,9 @@
 # Multisensi R package ; file gsi.r (last modified: 2015-12-07) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -65,7 +65,7 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
   ## inertia      : vector of inertia per PCs and Global criterion
   ## cor          : data.frame of correlation between PCs and outputs
   ## SI           : data.frame of first, two ... order Sensitivity Indices (SI) on PCs and
-  ##                        first, two...  order Generalized SI (GSI)
+  ##                        first, two...  order Generalised SI (GSI)
   ## mSI          : data.frame of principal SI on PCs and principal GSI
   ## tSI          : data.frame of total SI on PCs and total GSI
   ## iSI          : data.frame of interaction SI on PCs and interaction GSI
@@ -87,7 +87,7 @@ gsi <- function(formula, model, factors, inertia=0.95, normalized=TRUE, cumul=FA
   }
 
   result <- multisensi(design=multisensi.design, model=model, reduction=basis.ACP, dimension=inertia, center=TRUE, scale=normalized, analysis=analysis.anoasg, cumul=cumul, simulonly=simulonly, Name.File=Name.File, design.args=d.args, basis.args=list(), analysis.args=list(formula=formula,keep.ouputs=FALSE), ...)
-  cat("Warning : gsi function will not be maintained in future version of multisensi package.\n")
+  cat("Warning : gsi function can now be replaced by a call to the multisensi function. It is kept for compatibility with Version 1 of the multisensi package.")
   cat("You may use multisensi function instead, like this :\n")
   print(result$call.info$call)
 

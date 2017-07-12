@@ -18,7 +18,7 @@ analysis.sensitivity(Y, plan, nbcomp = 2, sigma.car = NULL,
   }
   \item{nbcomp}{the number of \code{Y} variables to analyse (the first \code{nbcomp} variables of \code{Y} will be analysed).
   }
-  \item{sigma.car}{unused by \code{analysis.sensitivity} but kept for compatibility with other analysis functions.
+  \item{sigma.car}{NULL or sum of squares of Y. If not NULL, compute the Generalised Sensitivity Indices (saved in the last column of the data.frame mSI/tSI/iSI outputs.
   }
   \item{analysis.args}{a list of arguments. If it contains \code{keep.outputs=TRUE}, the outputs associated with the analysis of each variable are returned (see section \code{Value}).
   }
@@ -37,7 +37,7 @@ analysis.sensitivity(Y, plan, nbcomp = 2, sigma.car = NULL,
   \item{outputkept}{if \code{ analysis.args$keep.outputs=TRUE}, list of the outputs returned by the sensitivity analysis performed on each variable}
   \item{call.info}{list with first element \code{analysis="sensitivity"} and second element \code{fct} storing the class name of the argument \code{plan}}
 }
-\author{C. Bidot, H. Monod}
+%\author{C. Bidot, H. Monod}
 \examples{
 # Test case : the Winter Wheat Dynamic Models (WWDM)
 library(sensitivity) # to use fast99

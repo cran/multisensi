@@ -16,5 +16,5 @@ planfact(nb.niv, make.factor = TRUE)
   \item{plan}{data frame of the complete factorial design}
 }
 \note{This is essentially an internal function for the \pkg{multisensi} package}
-\author{M. Lamboni}
+%\author{M. Lamboni}
 \keyword{internal function}

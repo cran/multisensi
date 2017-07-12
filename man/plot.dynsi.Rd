@@ -6,7 +6,7 @@
 }
 \usage{
 \method{plot}{dynsi}(x, normalized=FALSE, text.tuning = NULL, shade=FALSE,
-                     color=NULL, xtick=TRUE, total.plot=FALSE, ...)
+                     color=NULL, xtick=TRUE, total.plot=FALSE, gsi.plot=TRUE, ...)
 }
 \arguments{
   \item{x}{a dynsi object.}
@@ -18,7 +18,8 @@
   \item{color}{a palette of colors to enhance the different
     factorial effects in the plot (for example \code{color=heat.colors}).}
   \item{xtick}{if TRUE, put column names of outputs (Y) as ticks for the x axis.}
-  \item{total.plot}{logical value, TRUE => a second plot is produced with the total SI.}
+  \item{total.plot}{logical value, TRUE => a new plot is produced with the total SI.}
+  \item{gsi.plot}{logical value, TRUE => a new plot is produced for the Generalised Sensitivity Indice.}
   \item{...}{graphical parameters.}
 }
 \details{
@@ -29,4 +30,4 @@ frame, where 1 position corresponds to 1 output variable on the x-axis.
 }
 %\note{changed at version 1.0-6 (May 2013)}
 \seealso{\code{\link{dynsi}}, \code{\link{multisensi}}}
-\author{C. Bidot, M. Lamboni, H. Monod}
+%\author{C. Bidot, M. Lamboni, H. Monod}

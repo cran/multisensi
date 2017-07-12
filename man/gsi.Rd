@@ -1,6 +1,6 @@
 \name{gsi}
 \alias{gsi}
-\title{Generalized Sensitivity Indices: GSI}
+\title{Generalised Sensitivity Indices: GSI}
 \description{The gsi function implements the calculation of Generalised Sensitivity
   Indices. This method allows to compute a synthetic Sensitivity Index for
   the dynamic or multivariate models by using factorial designs and the
@@ -45,7 +45,7 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
   \item{inertia}{vector of inertia percentages per PCs and global criterion}
   \item{cor}{a data.frame of correlation between PCs and outputs}
   \item{SI}{a data.frame containing  the Sensitivity Indices (SI) on PCs
-    and the Generalized SI (GSI)}
+    and the Generalised SI (GSI)}
   \item{mSI}{a data.frame of first order SI on PCs and first order GSI}
   \item{tSI}{a data.frame containing the total SI on PCs and the total GSI}
   \item{iSI}{a data.frame of interaction SI on PCs and interaction GSI}
@@ -64,7 +64,7 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
   \item{outputs}{a list of results on each output variable}
   ...
 }
-\note{This function will not be maintained, we recommend use of the \code{\link{multisensi}} function instead (same outputs).}
+\note{This function can now be replaced by a call to the \code{\link{multisensi}} function. It is kept for compatibility with Version 1 of the \pkg{multisensi} package.}
 \references{
   M. Lamboni, D. Makowski and H. Monod, 2009. Multivariate
   global sensitivity analysis for dynamic
@@ -74,7 +74,7 @@ gsi(formula, model, factors, inertia = 0.95, normalized = TRUE,
   contribution of input factors in dynamic models. Submitted
   to Reliability Engineering  and System Safety.
 }
-\author{ M. Lamboni}
+%\author{ M. Lamboni}
 \seealso{\code{\link{dynsi}}, \code{\link{multisensi}}}
 \examples{
 # Test case : the Winter Wheat Dynamic Models (WWDM)

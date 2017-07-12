@@ -1,9 +1,9 @@
-# Multisensi R package ; file multivar.r (last modified: 2016-02-02) 
-# Copyright INRA 2011-2015 
+# Multisensi R package ; file multivar.r (last modified: 2017-04-06) 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -90,7 +90,7 @@ multivar <- function(simuls, dimension=NULL, reduction, centered=TRUE, scale=TRU
         cat("  names   : ",colnames(Y)[which(filtre.var)],"\n")
         cat("  indices : ",which(filtre.var),"\n")
         # colonnes retirees
-        Y <- Y[,!filtre.var]
+        Y <- Y[,!filtre.var,drop=FALSE]
       }
     }
   }
@@ -121,8 +121,8 @@ multivar <- function(simuls, dimension=NULL, reduction, centered=TRUE, scale=TRU
   sdH <- sqrt(apply(reduc.res$H,2,var)) ## en fait c'est la sortie sdev
   # on trie la base et les composantes principales en fonctions des variances de H
   stest <- order(sdH,decreasing=TRUE)
-  H <- reduc.res$H[,stest]
-  L <- reduc.res$L[,stest]
+  H <- reduc.res$H[,stest,drop=FALSE]
+  L <- reduc.res$L[,stest,drop=FALSE]
   sdH <- sdH[stest]
   # toutefois ce tri n'est pas utile pour l'ACP puisque déjà intégré dans prcomp...
 

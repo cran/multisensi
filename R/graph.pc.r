@@ -1,9 +1,9 @@
 # Multisensi R package ; file graph.pc.r (last modified: 2016-04-18) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -35,10 +35,11 @@
 graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, cor.plot=FALSE, xtick=TRUE, type="l",...)
 #===========================================================================
 {
-    ##x :          GSI objects
-    ##nb.plot:       A number decribing the max number of factor bars to be ploted
+    ## INPUTS
+    ##  x       :          GSI object
+    ##  nb.plot :       A number decribing the max number of factor bars to be ploted
 
-    ## modified HM 1/3/2010 until the end of the function (cf. "toPlot" and "toWrite")
+    
 
   if (is.null(nb.comp)){
     nbcomp <- ncol(x$L)
@@ -53,13 +54,9 @@ graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, cor.plo
       inertie[k] <- x$inertia[k]-x$inertia[k-1]
     }
   }
-#  names.comp <- paste(paste("PC",1:nbcomp,sep=""),signif(inertie,3),sep=" (" )
-#  names.comp <- paste(colnames(x$L)[1:nbcomp],signif(inertie,3),sep=" (" )
-#  names.comp <- paste(names.comp," %)",sep="")
-#  main.comp <- names.comp
+
   main.comp <- paste(colnames(x$L)[1:nbcomp],signif(inertie,3),sep=" (" )
   main.comp <- paste(main.comp," %)",sep="")
-
 
   if(cor.plot){ # on trace la sortie cor de multisensi = sdH*L
     if(x$normalized){
@@ -80,7 +77,7 @@ graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, cor.plo
     par(mfrow=c(2,nbcomp))
 
     for (k in 1:nbcomp){
-        plot(toPlot[,k], ylim=c(corrmin, corrmax) , type=type, col="blue", main= main.comp[k],  ylab=toWrite, lwd=3 ,cex.axis=2 ,cex=4, xlab="", xaxt="n",...)#xlab="time",
+        plot(toPlot[,k], ylim=c(corrmin, corrmax) , type=type, col="blue", main= main.comp[k],  ylab=toWrite, lwd=3 ,cex.axis=2 ,cex=4, xlab="", xaxt="n",...)
         abline(h=0)
         if(xtick){
           axis(1,at=1:nrow(toPlot),labels=colnames(x$Y))
@@ -93,7 +90,7 @@ graph.pc <-function(x, nb.plot=15, nb.comp=NULL, xmax=NULL, beside=TRUE, cor.plo
         graph.bar(x ,k ,nb.plot, xmax=xmax, beside=beside, ...)
     }
 
-  }else{ # on trace la variabilite des vecteurs de base L multiplies par leurs coeff H H*L
+  }else{ # on trace la variabilite des vecteurs de base L multiplies par leurs coeff H : H*L
     par(mfrow=c(2,nbcomp))
     for(k in 1:nbcomp){
       quantH=quantile(x$H[,k],c(0.50,0,0.25,0.75,1,0.10,0.90))

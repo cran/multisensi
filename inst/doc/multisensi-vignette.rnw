@@ -64,7 +64,7 @@ MaIAGE, INRA, Université Paris-Saclay, 78350 Jouy-en-Josas, France}
 %---------------------------------------------------------------------------
 \section{Introduction}
 %-----------------------------------------------------------------------
-Global sensitivity analysis is an essential tool for modelers in all application areas. Its aim is to quantify and compare the influence of uncertain parameters (or other input variables) on the output of a given model. There exist many different methods to perform sensitivity analysis, but they are usually restricted to a single output variable. On the contrary, the R package \multisensi\ is specifically designed to perform global sensitivity analyses on a multivariate model output. It calculates and represents graphically sensitivity indices on each output variable or on combinations of output variables arising from dimension reduction techniques.
+Global sensitivity analysis is an essential tool for modellers in all application areas. Its aim is to quantify and compare the influence of uncertain parameters (or other input variables) on the output of a given model. There exist many different methods to perform sensitivity analysis, but they are usually restricted to a single output variable. On the contrary, the R package \multisensi\ is specifically designed to perform global sensitivity analyses on a multivariate model output. It calculates and represents graphically sensitivity indices on each output variable or on combinations of output variables arising from dimension reduction techniques.
 
 The initial version of \multisensi\ was based on the combination of \emph{(i)} a factorial design on the uncertain model parameters; \emph{(ii)} the application of principal components analysis on the model output; \emph{(iii)} anova-based sensitivity analyses on the first principal components. This idea was proposed by Campbell \etal\ \cite{campbell06} and further studied by Lamboni \etal\ \cite{lammon11} (see also \cite{xiali16}). It is still implemented in \multisensi, but the present version includes alternative methods to perform the dimension reduction~: splines, bsplines and polynomial regression. In addition, several methods of global sensitivity analysis can now be used, including those implemented in the package \sensitivity\ \cite{pujioo15}.
 
@@ -148,9 +148,9 @@ Rather than reading tables of sensitivity indices, the user may prefer to plot t
  <<MEdynsi3, tidy=TRUE, echo=-(1),include=TRUE,  dev='pdf',close.dev=TRUE, fig.show='hold', fig.align='center',fig.width=6, fig.height=6, out.width='0.45\\linewidth'>>=
 par(cex.axis=1, cex.lab=0.9)
 # color palettes: rainbow, heat.colors, terrain.colors, topo.colors, cm.colors
-plot(verhulst.seq, normalized=TRUE, color=terrain.colors)
+plot(verhulst.seq, normalized=TRUE, color=terrain.colors, gsi.plot=FALSE)
 title(xlab="Time in half-decades.")
-plot(verhulst.seq, normalized=FALSE, color=terrain.colors)
+plot(verhulst.seq, normalized=FALSE, color=terrain.colors, gsi.plot=FALSE)
 title(xlab="Time in half-decades.")
 @
 

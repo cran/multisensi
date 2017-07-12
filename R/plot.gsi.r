@@ -1,9 +1,9 @@
 # Multisensi R package ; file plot.gsi.r (last modified: 2016-04-18) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -35,13 +35,13 @@
 plot.gsi <- function(x, nb.plot=10, nb.comp=3, graph=1:3, xmax=NULL, beside=TRUE, cor.plot=FALSE, xtick=TRUE, type="l",...)
 #===========================================================================
 {
-
-    ## x:         GSI object
+    ## INPUTS
+    ## x:         gsi object
 
     nb.comp <- min(ncol(x$H), nb.comp)
     nb.plot <- min(nb.plot, nrow(x$tSI))
 
-    ##if(is.null(graph)==FALSE && graph>3) {graph <- NULL}
+    
 
     if(1 %in% graph){
         if(dev.cur() == 1 | dev.interactive()) dev.new();
@@ -59,17 +59,15 @@ plot.gsi <- function(x, nb.plot=10, nb.comp=3, graph=1:3, xmax=NULL, beside=TRUE
         par(old.par)
     }
 
-    if(2 %in% graph & colnames(x$mSI)[ncol(x$mSI)]=="GSI"){#x$call.info$analysis=="anova"
-        # there is no GSI for sensitivity analysis
+    if(2 %in% graph & colnames(x$mSI)[ncol(x$mSI)]=="GSI"){
         if(dev.cur() == 1 | dev.interactive()) dev.new();
         old.par <- par(no.readonly = TRUE)
-        ## Generalized main and total sensitivity indices bars
+        ## Generalised main and total sensitivity indices bars
         graph.bar(x,
                   ncol(x$mSI),
                   nb.plot,
                   xmax=xmax,
                   beside=beside,
-#                  xlab="GSI",passe dans graph.bar
                   ...)
         par(old.par)
     }

@@ -22,5 +22,5 @@ simulmodel(model, plan, nomFic = NULL, verbose = FALSE, ...)
   variables}
 \value{data frame of model outputs}
 \note{This is essentially an internal function for the \pkg{multisensi} package}
-\author{M. Lamboni}
+%\author{M. Lamboni}
 \keyword{internal function}

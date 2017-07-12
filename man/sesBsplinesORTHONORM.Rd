@@ -30,6 +30,6 @@ integer, degree of the B-Splines
 \note{This is essentially an internal function for the \pkg{multisensi} package}
 
 \seealso{\code{\link{bspline}}, \code{\link{basis.osplines}}}
-\author{C. Bidot, J. Baudet}
+%\author{C. Bidot, J. Baudet}
 \keyword{internal function}
 \keyword{orthogonalized B-spline}

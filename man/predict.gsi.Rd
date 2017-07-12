@@ -21,7 +21,7 @@ need to be same factors and levels as for obtained the gsi object.}
 }
 \value{ a data.frame of predicted values for newdata}
 \details{Only available if the \code{gsi} object was obtained with analysis.anoasg and analysis.args$keep.outputs=TRUE.}
-\author{C. Bidot, H.Monod}
+%\author{C. Bidot, H.Monod}
 
 \seealso{\code{\link{gsi}}, \code{\link{multisensi}}, \code{\link{analysis.anoasg}}}
 \examples{

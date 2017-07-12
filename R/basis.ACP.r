@@ -1,9 +1,9 @@
 # Multisensi R package ; file basis.ACP.r (last modified: 2016-02-03) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -51,13 +51,13 @@ basis.ACP <- function(simuls, basis.args=list())
   ## call.info  : contient des indications sur la fonction utilisee, call.info$reduction="pca"
 
 
-########## ATTENTION
-# mettre en place des tests sur basis.args pour arguments optionnels de prcomp ?...
-#
-#ACP.prcomp <- do.call(prcomp,c(x=simuls,scale = normalized,basis.args))
-#=> Erreur dans as.matrix(x) : 
-#  l'argument "x" est manquant, avec aucune valeur par défaut
-####################################################
+
+
+
+
+
+
+
 
   ACP.prcomp <- prcomp(simuls, center=FALSE, scale.=FALSE)
   # l'objet simuls doit etre centre-reduit si on veut faire ACP centree-reduite

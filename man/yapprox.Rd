@@ -15,5 +15,5 @@ yapprox(multivar.obj, nbcomp = 2, aov.obj)
 \value{model output predictions}
   
 \note{This is essentially an internal function for the \pkg{multisensi} package}
-\author{C. Bidot, M. Lamboni}
+%\author{C. Bidot, M. Lamboni}
 \keyword{internal function}

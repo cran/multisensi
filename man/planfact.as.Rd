@@ -15,5 +15,5 @@ planfact.as(input)
 }
 \note{This is essentially an internal function for the \pkg{multisensi}
   package. It is almost equivalent to the function \code{\link[base]{expand.grid}}.}
-\author{M. Lamboni}
+%\author{M. Lamboni}
 \keyword{internal function}

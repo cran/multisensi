@@ -8,33 +8,41 @@ year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
 vers <- paste("R package version", meta$Version)
 url <- meta$URL
      
-citEntry(entry="Article",
+bibentry(bibtype="Article",
   author = personList(as.person("Matieyendou Lamboni"),
            as.person("David Makowski"), as.person("Simon Lehuger"),
-           as.person("Benoit Gabrielle"), as.person("Herv\'e Monod")),
+           as.person("Benoit Gabrielle"), as.person("Hervé Monod")),
   title = "Multivariate global sensitivity analysis for dynamic crop models",
   journal = "Field Crops Research",
   year = {2009},
   volume = {113},
   pages = {312-320},
   textVersion = paste("Matieyendou Lamboni, David Makowski, Simon
-  Lehuger, Benoit Gabrielle and Herv\'e Monod (2009). Multivariate
+  Lehuger, Benoit Gabrielle and Hervé Monod (2009). Multivariate
   global sensitivity analysis for dynamic crop models. Field Crops
   Research, 113, 312-320.")
 )
 
-citEntry(entry="Article",
+bibentry(bibtype="Article",
   author = personList(as.person("Matieyendou Lamboni"),
-           as.person("Herv\'e Monod"), as.person("David Makowski")),
+           as.person("Hervé Monod"), as.person("David Makowski")),
   title = "Multivariate sensitivity analysis to measure global
            contribution of input factors in dynamic models",
   journal = "Reliability Engineering and System Safety",
   year = {2011},
   volume = {96},
   pages = {450-459},
-  textVersion = paste("Matieyendou Lamboni, Herv\'e Monod, and David
+  textVersion = paste("Matieyendou Lamboni, Hervé Monod, and David
   Makowski (2011). Multivariate sensitivity analysis to measure global
   contribution of input factors in dynamic models. Reliability
   Engineering and System Safety, 96, 450-459.")
 )
 
+bibentry(bibtype = "Manual",
+         title = "{multisensi}: Multivariate Sensitivity Analysis",
+         author = c(person(given = "Caroline", family = "Bidot"),
+                    person(given = "Matieyendou", family = "Lamboni"),
+                    person(given = "Hervé", family = "Monod")),
+         year = year,
+         note = vers,
+         url = "https://CRAN.R-project.org/package=multisensi")

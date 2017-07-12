@@ -17,7 +17,7 @@ analysis.anoasg(Y, plan, nbcomp = 2, sigma.car = NULL,
   }
   \item{nbcomp}{the number of \code{Y} variables to analyse (the first \code{nbcomp} variables of \code{Y} will be analysed).
   }
-  \item{sigma.car}{ NULL or sum of squares of Y. If NULL, Dynamic Sensitivity analysis will be done (\code{dynsi}), else it will be Generalized Sensitivity analysis (\code{gsi}).
+  \item{sigma.car}{NULL or sum of squares of Y. If not NULL, compute the Generalised Sensitivity Indices (saved in the last column of the data.frame mSI/tSI/iSI outputs.
   }
   \item{analysis.args}{a list of arguments. The \code{formula} component is for ANOVA formula like \code{"A+B+c+A:B"} OR an integer giving the maximum interaction order (1 for main effects). If it contains \code{keep.outputs=TRUE}, the outputs associated with the analysis of each variable are returned (see section \code{Value}).
   }

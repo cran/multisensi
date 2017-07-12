@@ -1,9 +1,9 @@
-# Multisensi R package ; file analysis.sensitivity.r (last modified: 2016-02-03) 
-# Copyright INRA 2011-2015 
+# Multisensi R package ; file analysis.sensitivity.r (last modified: 2017-04-06) 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -41,8 +41,9 @@ analysis.sensitivity <- function(Y, plan, nbcomp=2, sigma.car=NULL, analysis.arg
   ## Y              : data.frame dont les colonnes sont traitees successivement
   ## plan           : sortie de fonction de sensitivity de type sobol2007 avec model=NULL
   ## nbcomp         : nombre de colonnes de Y traitees (les nbcomp premieres)
-  ## sigma.car      : inutile pour la fonction (NULL default value), sa presence sert 
-  ##                  juste pour homogeneiser l'appel avec autres fonctions analysis
+  ## sigma.car      :  permet de choisir de faire les calculs de GSI [dynsi/gsi]
+  ##                  = SStot de Y, on fait les calculs de GSI [dynsi/gsi]
+  ##                  = NULL sinon, on fait juste les calculs de SI pour chaque colonne
   ## analysis.args  : liste contenant
   ## - keep.outputs : variable logique pour decider de garder ou non les nbcomp sorties successives
 
@@ -121,13 +122,13 @@ analysis.sensitivity <- function(Y, plan, nbcomp=2, sigma.car=NULL, analysis.arg
   }
 
   if(!is.null(sigma.car) && class(plan)!="morris"){
-    #gsi case
+    #gsi calculus
     # on calcule la variance des H pour chaque composante
-    VarH=apply(Y[,1:nbcomp],2,var) # vecteur de longueur nbcomp
-    GSI=rowSums(indices.main*t(matrix(rep(VarH,nrow(indices.main)),nbcomp,nrow(indices.main))))/sum(VarH)
+    VarH=apply(Y[,1:nbcomp,drop=FALSE],2,var) # vecteur de longueur nbcomp
+    GSI=rowSums(indices.main*t(matrix(rep(VarH,nrow(indices.main)),nbcomp,nrow(indices.main))),na.rm=TRUE)/sum(VarH)
     indices.main=cbind(indices.main,GSI)
     if(!is.null(xtemp$T)){ # parfois la sortie T n'existe pas (certaines fonctions "sobol")
-      GSI=rowSums(indices.tot*t(matrix(rep(VarH,nrow(indices.tot)),nbcomp,nrow(indices.tot))))/sum(VarH)
+      GSI=rowSums(indices.tot*t(matrix(rep(VarH,nrow(indices.tot)),nbcomp,nrow(indices.tot))),na.rm=TRUE)/sum(VarH)
       indices.tot=cbind(indices.tot,GSI)
     }else{
       indices.tot=cbind(indices.tot,NA)
@@ -138,10 +139,10 @@ analysis.sensitivity <- function(Y, plan, nbcomp=2, sigma.car=NULL, analysis.arg
   # calcul des parts dues aux interactions (total - main)
   indices.inter <-  indices.tot- indices.main
 
-#que faire du tableau indices ? il sert pour plot ?
-#il n'est pas vide pour morris
-#  indices=indices.main
-# if(sum(indices.tot)==0){indices.tot=NULL;}
+
+
+
+
 
   ##-----------------------------------------------------------------------------
   ##                                      result
@@ -149,10 +150,10 @@ analysis.sensitivity <- function(Y, plan, nbcomp=2, sigma.car=NULL, analysis.arg
 
   call.info=list(analysis="sensitivity",fct=class(plan))
 
-  return(list(SI=indices,#100*indices,
-              mSI=indices.main,#100*indices.main,
-              tSI=indices.tot,#100*indices.tot,
-              iSI=indices.inter,#100*indices.inter,
+  return(list(SI=indices,
+              mSI=indices.main,
+              tSI=indices.tot,
+              iSI=indices.inter,
               inertia=rep(NA,nbcomp),
               indic.fact=indic.fact,
               Hpredict=NULL,

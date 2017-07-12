@@ -1,9 +1,9 @@
-# Multisensi R package ; file plot.dynsi.r (last modified: 2016-02-03) 
-# Copyright INRA 2011-2015 
+# Multisensi R package ; file plot.dynsi.r (last modified: 2017-04-06) 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -32,16 +32,17 @@
 # knowledge of the CeCILL license and that you accept its terms.
 #
 #===========================================================================
-plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color=NULL, xtick=TRUE, total.plot=FALSE, ...)
+plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color=NULL, xtick=TRUE, total.plot=FALSE, gsi.plot=TRUE, ...)
 #===========================================================================
 {
-    ## new argument "normalized" : FALSE => SI plotted within var(Y)
-    ## changed by HM, 2013-05-03 : new arguments "shade" and "color"
-    ## ENTREE
-    ##               x:         dynsi  object
+    
+    
+    ## INPUTS
+    ##  x:         dynsi  object
+    ##  ...
+    ## OUPUT
+    ##  Graphic device
 
-    ##SORTIE
-    ##              Graphique
   VarY=apply(x$Y,2,var)
   jmax=which.max(VarY)
 
@@ -49,19 +50,19 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
     # dans le cadre de l'anova on traite les interactions
     filtre.main <- colSums(x$Att)==1 #apply(x$Att,2,sum)==1
     filtre.inter <- !filtre.main
-    interaction <-  filtre.inter %*%as.matrix(x$SI)
-#    interaction <- colSums(x$iSI)/2 # pourrait remplacer les 3 lignes precedentes dans les cas d'interaction 2a 2
-    tab.indicesmi <- as.data.frame(rbind( as.matrix(x$mSI[order(x$mSI[,jmax]),]),interaction))
+    interaction <-  filtre.inter %*%as.matrix(x$SI[,which(colnames(x$SI)!="GSI")])
+
+    tab.indicesmi <- as.data.frame(rbind( as.matrix(x$mSI[order(x$mSI[,jmax]),which(colnames(x$mSI)!="GSI")]),interaction))
     rownames(tab.indicesmi)[nrow(tab.indicesmi)]<- "interaction"
   } else if(x$call.info$analysis=="sensitivity"){
-    tab.indicesmi <- as.data.frame(x$mSI[order(x$mSI[,jmax]),])
-    #rownames(tab.indicesmi)<- rownames( x$mSI)
+    tab.indicesmi <- as.data.frame(x$mSI[order(x$mSI[,jmax]),which(colnames(x$mSI)!="GSI")])
+    
   }
 
-#  tab.indicesmi[1:nrow(x$mSI),]=tab.indicesmi[order(x$mSI[,jmax]),]
+
   indice.cum <-apply( tab.indicesmi,2,cumsum)
 
-    ## ajout CB
+    
     indice.cum=rbind(indice.cum,1)#100)
   if(x$call.info$analysis=="anova"){
     rownames(indice.cum)[nrow(indice.cum)]="residual"
@@ -70,18 +71,15 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
   }
 
     if(!normalized){
-        #sdY=sqrt(apply(x$Y,2,var))
+        
         for (j in 1:ncol(indice.cum)) {
-          indice.cum[,j] <- indice.cum[,j]* VarY[j]#/100 
+          indice.cum[,j] <- indice.cum[,j]* VarY[j]
         }
     }
 
 
     ## recherche des positions pour afficher les noms des parametres
 
-#    nb.outp <- ncol(tab.indicesmi)
-#    names <- rownames(tab.indicesmi)
-#    n.name <-1:(nrow(tab.indicesmi)+1)
     nb.outp <- ncol(indice.cum)
     names <- rownames(indice.cum)
     n.name <-1:nrow(indice.cum)
@@ -115,25 +113,27 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
 
     if(normalized){
       # plot des outputs au-dessus des indices
-      Y1=colMeans(x$Y)-sqrt(VarY)
-      Y2=colMeans(x$Y)+sqrt(VarY)
+      quantY=apply(x$Y,2, quantile,c(0.50,0,0.25,0.75,1,0.10,0.90),na.rm=TRUE)
 
       par(fig=c(0,1,0.7,1),mar=c(0,4.1, 4.1, 2.1))
       #pour limites et etiquettes
       ytck=pretty(c(min(x$Y,na.rm=TRUE),max(x$Y,na.rm=TRUE)))
       #max
-      plot(1:length(VarY), apply(x$Y,2,max), type="l", xaxt="n", xlab="", ylab="Outputs", yaxp=c(min(ytck),max(ytck),1), lwd=1, ylim=c(min(ytck),max(ytck)), lty=4, cex.axis=.7,las=1)
-      #moy +/- sdY
+      plot(1:length(VarY), quantY[5,], type="l", xaxt="n", xlab="", ylab="Outputs", yaxp=c(min(ytck),max(ytck),1), lwd=1, ylim=c(min(ytck),max(ytck)), lty=4, cex.axis=.7, las=1, col="red")
+      #25-75%
       if(shade || !is.null(color)){
-        polygon(c(1:length(VarY),seq(from=length(VarY),to=1,by=-1)),c(Y1,Y2[seq(from=length(VarY),to=1,by=-1)]),col="gray",lty=0)
+        polygon(c(1:length(VarY),seq(from=length(VarY),to=1,by=-1)),c(quantY[3,],quantY[4,seq(from=length(VarY),to=1,by=-1)]),col="gray",lty=0)
       }else{
-        lines(1:length(VarY),Y1,lty=2)
-        lines(1:length(VarY),Y2,lty=2)
+        lines(1:length(VarY), quantY[3,], lty=2)
+        lines(1:length(VarY), quantY[4,], lty=2)
       }
       #min
-      lines(1:length(VarY),apply(x$Y,2,min),lty=4)
-      #moy
-      lines(1:length(VarY),colMeans(x$Y),lty=1,lwd=2)
+      lines(1:length(VarY), quantY[2,], lty=4, col="red")
+      #median
+      lines(1:length(VarY), quantY[1,], lty=1,lwd=2)
+      #10-90%
+      lines(1:length(VarY), quantY[6,], lty=3, col="blue")
+      lines(1:length(VarY), quantY[7,], lty=3, col="blue")
       #emplacement plot des indices
       par(fig=c(0,1,0,0.7),mar=c(5.1, 4.1, 0 ,2.1),new=TRUE,las=1)
     }
@@ -166,10 +166,10 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
          font=2)
 
     for (k in 2:nrow(tab.indicesmi)){
-#    for (k in 2:nrow(indice.cum)){
+
 
         j <- k-1
-        ## changed by HM, 2013-05-03
+        
         if(shade){
           quat <-floor(j/4)
           if(quat*4-j==0){ang <-0}
@@ -188,17 +188,17 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
              cex=1,col="black",font=2)
       }
 
-#Avant ajout de la ligne residual dans indice.cum :
-#    polygon( c(1:nb.outp, rev(1:nb.outp) ) ,
-#            c(indice.cum[nrow(indice.cum),],rep(100,nb.outp)),
-#            density=densite[8], angle=30)
-#    text(n.name[nrow(tab.indicesmi)+1],
-#         indice.cum[nrow(indice.cum),n.name[nrow(tab.indicesmi)+1]]/2+50,
-#         "residual",
-#         cex=1,col="black",font=2)
 
-#Apres ajout de la ligne residual dans indice.cum :
-# cad k = nrow(indice.cum) = nrow(tab.indicesmi)+1
+
+
+
+
+
+
+
+
+
+
     polygon( c(1:nb.outp, rev(1:nb.outp) ) ,
             c(indice.cum[nrow(indice.cum)-1,],rev(indice.cum[nrow(indice.cum),])),
             density=densite[8], angle=30)
@@ -220,7 +220,7 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
 #        YLabel="sigma"
 #      }
 #    }
-    total.indices=x$tSI[order(x$tSI[,jmax],decreasing=TRUE),];
+    total.indices=x$tSI[order(x$tSI[,jmax],decreasing=TRUE),which(colnames(x$tSI)!="GSI")];
     if(!normalized){
       for (j in 1:ncol(total.indices)) {
             total.indices[,j] <- total.indices[,j]* VarY[j]#/100 
@@ -264,6 +264,18 @@ plot.dynsi <- function(x, normalized=FALSE, text.tuning=NULL, shade=FALSE, color
       par(old.par)
     }#endif morris
   }#endif sensitivity
+
+  if(gsi.plot & colnames(x$mSI)[ncol(x$mSI)]=="GSI"){
+    if(dev.cur() == 1 | dev.interactive()) dev.new();
+    old.par <- par(no.readonly = TRUE)
+    ## Generalised main and total sensitivity indices bars
+    graph.bar(x,
+              ncol(x$mSI),
+              nrow(x$mSI),
+              ...)
+    par(old.par)
+  }
+
 
 }
 

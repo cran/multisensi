@@ -18,7 +18,7 @@ multivar(simuls, dimension = NULL, reduction, centered = TRUE,
   }
   \item{reduction}{a function to decompose the multivariate output on a basis of smaller dimension
   }
-  \item{centered}{logical value. If TRUE the output variables are centered.}
+  \item{centered}{logical value. If TRUE the output variables are centred.}
   \item{scale}{logical value. If TRUE the output variables are normalized.}
   \item{basis.args}{
     a list of arguments for the function given in the \code{reduction} argument. See the function help for more precision.

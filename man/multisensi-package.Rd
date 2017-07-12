@@ -55,7 +55,7 @@ Saltelli, A., Chan, K., Scott, E.M. eds, 2000. \emph{Sensitivity
 Analysis} Wiley, New York.  
 }
 
-\author{C. Bidot, % \email{caroline.bidot@jouy.inra.fr}
-M. Lamboni, %\email{clamboni@yahoo.fr}
-H. Monod} %\email{herve.monod@jouy.inra.fr}
+%\author{C. Bidot, % \email{caroline.bidot@inra.fr}
+%M. Lamboni, %\email{matieyendou.lamboni@gmail.com}
+%H. Monod} %\email{herve.monod@inra.fr}
 

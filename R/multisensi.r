@@ -1,9 +1,9 @@
-# Multisensi R package ; file multisensi.r (last modified: 2016-04-18) 
-# Copyright INRA 2011-2015 
+# Multisensi R package ; file multisensi.r (last modified: 2017-04-24) 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -98,7 +98,7 @@ multisensi <- function(design=expand.grid, model, reduction=basis.ACP, dimension
   ## inertia       : vector of inertia per PCs and Global criterion
   ## cor           : data.frame of correlation between PCs and outputs
   ## SI            : data.frame of first, two ... order Sensitivity Indices (SI) on PCs and
-  ##                        first, two...  order Generalized SI (GSI)
+  ##                        first, two...  order Generalised SI (GSI)
   ## mSI           : data.frame of principal SI on PCs and principal GSI
   ## tSI           : data.frame of total SI on PCs and total GSI
   ## iSI           : data.frame of interaction SI on PCs and interaction GSI
@@ -113,69 +113,6 @@ multisensi <- function(design=expand.grid, model, reduction=basis.ACP, dimension
   ## inputdesign   : X ou objet de sensitivity principal utilise pour les calculs
   ## outputs       : contient toutes les sorties des analyses si analysis.args$keep.outputs=TRUE
 
-
-# pour Rd
-  ##INPUTS
-  ## formula        : ANOVA formula like "A+B+c+A:B"   OR  The max interaction
-  ##                  order like 2 for example.
-  ## factors        : Data.frame design if model is data.frame OR a list of factors
-  ##                  levels: factor<- list(A=c(0,1),B=c(0,1,4))
-  ## design         : methode a appliquer pour faire le plan si factors n'est pas un data.frame
-  ##                  expand.grid default
-  ## model          : Data.frame output matrix OR The name of the R-function
-  ##                  which decribes the model. This function
-  ##                  must take only a vector corresponding to the input factors values
-  ## reduction      : methode a appliquer pour la decomposition
-  ##                  basis.ACP default
-  ## dimension      : Inertia proportion account by Principal components <1 (0.95 default )
-  ##                  OR number of PCs to be used (E.g 3) OR NULL to take all PCs
-  ## center         : logical value. TRUE (default) pour centrer l'output matrix
-  ##                
-  ## scale     : logical value. TRUE (default) computes a scale "basis"
-  ##                
-  ## analysis       : methode a appliquer pour faire l'analyse
-  ##                  NOT IMPLEMENTED YET
-  ## cumul          : logical value. If TRUE the PCA will be done on the cumulative outputs
-  ## simulonly      : logical value.  If TRUE the program simulates only the model outputs
-  ##                  and stops
-  ## Name.File      : Name of file containing the R-function model.
-  ##                  E.g  "exc.ssc"
-  ## basis.args : arguments specifiques a la methode de reduction sous forme de list
-  ## analysis.args : arguments specifiques a la methode d'analyse sous forme de list
-  ##                y mettre par exemple formula pour analysis.anoasg : ANOVA formula like "A+B+c+A:B"   OR  The max interaction
-  ##                  order like 2 for example.
-  ## ...            : possible fixed parameters of the model function
-  
-  ## OUTPUTS
-  ## OUTPUTS
-  ## Objet de classe dynsi contenant
-  ## X            : data.frame design of experiment (input sample)
-  ## Y            : data.frame of model ouput output matrix (response)
-  ## SI           : data.frame of first order, two ... Sensitivity Indices (SI) on model outputs
-  ## tSI          : data.frame of total SI on model outputs
-  ## mSI          : data.frame of principal SI on model outputs
-  ## iSI          : data.frame of interaction SI on model outputs
-  ## Att          : 
-  ##GSI objet de classe gsi contient
-  ##
-  ## X            : data.frame design of experiment (input sample)
-  ## Y            : data.frame output matrix (response)
-  ## H            :
-  ## L            :
-  ## lambda       :
-  ## inertia      : vector of inertia per PCs and Global criterion
-  ## cor          : data.frame of correlation between PCs and outputs
-  ## SI           : data.frame of first, two ... order Sensitivity Indices (SI) on PCs and
-  ##                        first, two...  order Generalized SI (GSI)
-  ## mSI          : data.frame of principal SI on PCs and principal GSI
-  ## tSI          : data.frame of total SI on PCs and total GSI
-  ## iSI          : data.frame of interaction SI on PCs and interaction GSI
-  ## pred         :
-  ## residuals    :
-  ## Rsquare      : vector of dynamic coefficient of determination
-  ## Att          : matrice 0-1 de correspondance facteurs*termes-du-modele
-  ## scale   : logical value used for scale
-  ## cumul        : logical value used for cumul
 
   designbuilt=FALSE #variable de test pour message user si besoin
   ##----------------------------------------------------------------
@@ -284,25 +221,41 @@ multisensi <- function(design=expand.grid, model, reduction=basis.ACP, dimension
   ##   => then a dimension reduction (PCA, projection on polynomial or splines basis) is done
   if(is.null(reduction)){
     # dynsi case
-    #on n'applique pas de normalisation quelquesoit l'arguments
+    # on n'applique pas de normalisation quelque soit l'argument
     # mais on centre si demand'e
     nbcomp=ncol(Y)
     if(!is.null(dimension)){
       if(length(dimension)>1){
-        Y=Y[,dimension]
-        nbcomp=length(dimension)
+        Y <- Y[,dimension,drop=FALSE]
+        nbcomp <- length(dimension)
       }else if(dimension>=1){
-        nbcomp=min(nbcomp,dimension)
+        nbcomp <- min(nbcomp,dimension)
       }
     }
     sdY <- sqrt(apply(Y,2,var))
-#    if(center){cat("Reminder : response simulation will be centered as argument center=TRUE\n")}
+    # recherche de colonnes constantes et validation de l'option scale
+    filtre.var <- sdY==0
+    # on cherche les colonnes constantes
+    if(all(filtre.var)){
+      stop("All columns have 0 variance: sensitivity analysis cannot be done. \n")
+    }else{
+      if(any(filtre.var)){
+        cat("Constant columns are ignored : \n")
+        # donner nom et numero colonne supprimee
+        cat("  names   : ",colnames(Y)[which(filtre.var)],"\n")
+        cat("  indices : ",which(filtre.var),"\n")
+        # colonnes retirees
+        Y <- Y[,!filtre.var,drop=FALSE]
+        sdY <- sdY[!filtre.var]
+        nbcomp <- min(nbcomp,ncol(Y))
+      }
+    }
+#    if(center){cat("Reminder : response simulation will be centred as argument center=TRUE\n")}
     centering <- 0+center*t(matrix(rep(colMeans(Y),nrow(Y)),ncol(Y),nrow(Y)))
     scaling=((1-scale)+sdY*scale)
     importance <- cumsum(sdY^2)/sum(sdY^2) # SStot <- (nrow(Y)-1)*sum(apply(Y,2,var))
     names(importance)=colnames(Y)
-    # SStot est NULL pour etre en mode "dynsi" dans analysis (cad pas de GSI et inertia)
-    multi.res=list(H=Y-centering, L=NULL, sdev=NULL, nbcomp=nbcomp, SStot=NULL, centering=centering, 
+    multi.res=list(H=Y-centering, L=NULL, sdev=NULL, nbcomp=nbcomp, SStot=(nrow(Y)-1)*sum(apply(Y,2,var)), centering=centering, 
                    scaling=scaling, sdY=sdY, cor=NULL, scale=scale, importance=100*importance, call.info=list(reduction=NULL))
   }else{
     # gsi case
@@ -325,11 +278,12 @@ multisensi <- function(design=expand.grid, model, reduction=basis.ACP, dimension
     ANOASG$inertia=multi.res$importance[1:multi.res$nbcomp]
   }else if(all(is.na(ANOASG$inertia))){
     ANOASG$inertia=multi.res$importance[1:multi.res$nbcomp]
-  }#else{
-#    cat("\nTEST importance vs inertia\n")
-#    print(all(abs(ANOASG$inertia[1:multi.res$nbcomp]-multi.res$importance[1:multi.res$nbcomp])<1e-10))
-#    cat("\n")
-#  }
+  }
+
+
+
+
+
 
   # message d'avertissement si indices negatifs (sobol)
   if(any(ANOASG$mSI<0,na.rm=TRUE)){
@@ -345,7 +299,7 @@ multisensi <- function(design=expand.grid, model, reduction=basis.ACP, dimension
   ##-------------------------------------------------------------
   ##  STEP 5 : Goodness of fit computing
   ##-------------------------------------------------------------
-  if(is.null(ANOASG$Hpredict)){
+  if(is.null(reduction) | is.null(ANOASG$Hpredict)){
     # on n'a pas de H chapeau donc on peut pas faire le metamodele ni la qualite d'approx
     Yapp=NULL
     qual.app=list(residuals=NULL,coef.det=NULL)
@@ -382,8 +336,8 @@ multisensi <- function(design=expand.grid, model, reduction=basis.ACP, dimension
     # gsi case
     result <- list(X=X,
                    Y=as.data.frame(Y),
-                   H=as.data.frame(multi.res$H[,1:multi.res$nbcomp]),
-                   L=as.data.frame(multi.res$L[,1:multi.res$nbcomp]),
+                   H=as.data.frame(multi.res$H[,1:multi.res$nbcomp,drop=FALSE]),
+                   L=as.data.frame(multi.res$L[,1:multi.res$nbcomp,drop=FALSE]),
                    lambda=((multi.res$sdev)^2)[1:multi.res$nbcomp],
                    inertia= ANOASG$inertia,
                    cor=multi.res$cor,

@@ -1,9 +1,9 @@
 # Multisensi R package ; file dynsi.r (last modified: 2015-12-07) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -71,7 +71,7 @@ dynsi <- function(formula, model, factors, cumul=FALSE, simulonly=FALSE, nb.outp
   }
 
   result <- multisensi(design=multisensi.design, model=model, reduction=NULL, dimension=nb.outp, center=FALSE, scale=FALSE, analysis=analysis.anoasg, cumul=cumul, simulonly=simulonly, Name.File=Name.File, design.args=d.args, analysis.args=list(formula=formula,keep.ouputs=FALSE), ...)
-  cat("Warning : dynsi function will not be maintained in future version of multisensi package.\n")
+  cat("Warning : dynsi function can now be replaced by a call to the multisensi function. It is kept for compatibility with Version 1 of the multisensi package.\n")
   cat("You may use multisensi function instead, like this :\n")
   print(result$call.info$call)
 

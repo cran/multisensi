@@ -1,9 +1,9 @@
 # Multisensi R package ; file predict.gsi.r (last modified: 2016-04-19) 
-# Copyright INRA 2011-2015 
 # Authors: C. Bidot, M. Lamboni, H. Monod
+# Copyright INRA 2011-2017 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
-# More about multisensi in http://cran.r-project.org/web/packages/multisensi/
+# More about multisensi in https://CRAN.R-project.org/package=multisensi
 #
 # This software is governed by the CeCILL license under French law and
 # abiding by the rules of distribution of free software.  You can  use, 
@@ -69,19 +69,19 @@ predict.gsi <- function(object, newdata=NULL, ...)
           Hpred[,i]=predict(object$outputs[[i]],newdata=as.data.frame(newdata), ...)
         }
 
-        # faire une liste type sortie de multivar et utiliser yapprox
-  #  return(list(H=H,                 # taille nrow(simuls) x nbcomp++
-  #              L=L,                 # taille ncol(simuls) x nbcomp++
-  #              sdev=sdH,            # longueur nbcomp++
-  #              nbcomp=nbcomp,       # < ou = nbcomp++
-  #              SStot=SStot,
-  #              centering=centering, # taille nrow(simuls) x ncol(simuls)
-  #              scaling=scaling,     # longueur ncol(simuls)
-  #              sdY=sdY,             # longueur ncol(simuls)
-  #              cor=correlation,     # taille ncol(simuls) x nbcomp
-  #              scale=scale,         # au cas ou option scale ait ete changee dans la fonction
-  #              importance=100*importance # longueur nbcomp++
-  #              )
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       # ou faire directement les calculs sans passer par yapprox
       pred <- Hpred %*% t(object$L)

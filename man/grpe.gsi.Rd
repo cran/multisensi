@@ -12,5 +12,5 @@ grpe.gsi(GSI, fact.interet)
   \item{fact.interet}{input factor to be grouped}
 }
 \note{This is essentially an internal function for the \pkg{multisensi} package}
-\author{M. Lamboni}
+%\author{M. Lamboni}
 \keyword{internal function}

@@ -20,4 +20,4 @@ graph.bar(x, col = 1, nb.plot = 15, xmax = NULL,
   \item{xlab}{a label for the x axis}
   \item{...}{graphical parameters}
 }
-\author{M. Lamboni}
+%\author{M. Lamboni}
