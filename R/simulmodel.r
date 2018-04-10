@@ -1,6 +1,6 @@
 # Multisensi R package ; file simulmodel.r (last modified: 2016-01-07) 
 # Authors: C. Bidot, M. Lamboni, H. Monod
-# Copyright INRA 2011-2017 
+# Copyright INRA 2011-2018 
 # MaIAGE, INRA, Univ. Paris-Saclay, 78350 Jouy-en-Josas, France
 #
 # More about multisensi in https://CRAN.R-project.org/package=multisensi

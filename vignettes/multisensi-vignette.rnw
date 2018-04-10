@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage{epic,latexsym,amsmath,amsfonts}
-\usepackage{graphicx} 
+\usepackage{graphicx}
 \usepackage{epsfig}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -329,7 +329,7 @@ Of course, the Sobol method of sensitivity analysis can also be combined with th
 \begin{figure}
 <<MEdynsiSobolplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=6, fig.height=6, out.width='0.7\\linewidth'>>=
   par(cex.axis=0.8, cex.lab=0.9)
-  plot(verhulst.seq.sobol, normalized=TRUE, color=terrain.colors)
+  plot(verhulst.seq.sobol, normalized=TRUE, color=terrain.colors, gsi.plot=FALSE)
   title(xlab="Time in half-decades")
 @
   \protect\caption{Evolution of the Sobol sensitivity indices of the Verhulst model from $t=5$ to $t=100$. The upper subplot shows the extreme (tirets), inter-quartile (grey) and median (bold line) output values at all time steps. The lower subplot represents the sensitivity indices at all time steps for the main effects and the first-order interactions.}
@@ -354,7 +354,7 @@ Results are shown above and the sequence of sensitivity indices is displayed in 
 \begin{figure}
 <<MEdynsiFastplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=6, fig.height=6, out.width='0.7\\linewidth'>>=
   par(cex.axis=0.8, cex.lab=0.9)
-  plot(verhulst.seq.fast, normalized=TRUE, color=terrain.colors)
+  plot(verhulst.seq.fast, normalized=TRUE, color=terrain.colors, gsi.plot=FALSE)
   title(xlab="Time in half-decades")
 @
   \protect\caption{Evolution of the Fast sensitivity indices of the Verhulst model from $t=5$ to $t=100$. The upper subplot shows the extreme (tirets), inter-quartile (grey) and median (bold line) output values at all time steps. The lower subplot represents the sensitivity indices at all time steps for the main effects and the first-order interactions.}

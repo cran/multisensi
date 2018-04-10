@@ -106,7 +106,7 @@ print(verhulst.seq.sobol,digits=2)
 
 ## ----MEdynsiSobolplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=6, fig.height=6, out.width='0.7\\linewidth'----
   par(cex.axis=0.8, cex.lab=0.9)
-  plot(verhulst.seq.sobol, normalized=TRUE, color=terrain.colors)
+  plot(verhulst.seq.sobol, normalized=TRUE, color=terrain.colors, gsi.plot=FALSE)
   title(xlab="Time in half-decades")
 
 ## ----MEdynsiFast, tidy=FALSE, echo=TRUE, include=TRUE-------------
@@ -120,6 +120,6 @@ verhulst.seq.fast <- multisensi(design = fast99, model = verhulst2,
 
 ## ----MEdynsiFastplot, tidy=TRUE, echo=-(1), include=TRUE, dev='pdf', close.dev=TRUE, fig.align='center',fig.width=6, fig.height=6, out.width='0.7\\linewidth'----
   par(cex.axis=0.8, cex.lab=0.9)
-  plot(verhulst.seq.fast, normalized=TRUE, color=terrain.colors)
+  plot(verhulst.seq.fast, normalized=TRUE, color=terrain.colors, gsi.plot=FALSE)
   title(xlab="Time in half-decades")
 
